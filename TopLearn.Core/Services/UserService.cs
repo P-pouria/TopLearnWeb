@@ -172,7 +172,7 @@ namespace TopLearn.Core.Services
             int userId = GetUserIdByUserName(userName);
 
             var enter = _context.Wallets
-                .Where(w => w.UserId == userId && w.TypeId == 1&&w.IsPay)
+                .Where(w => w.UserId == userId && w.TypeId == 1 && w.IsPay)
                 .Select(w => w.Amount)
                 .ToList();
 
@@ -190,16 +190,16 @@ namespace TopLearn.Core.Services
 
             return _context.Wallets
                 .Where(w => w.IsPay && w.UserId == userId)
-                .Select(w=>new WalletViewModel()
+                .Select(w => new WalletViewModel()
                 {
                     Amount = w.Amount,
-                    DateTime=w.CreateDate,
-                    Description=w.Description,
-                    Type =w.TypeId
+                    DateTime = w.CreateDate,
+                    Description = w.Description,
+                    Type = w.TypeId
                 }).ToList();
         }
 
-        public void ChargeWallet(string userName, int amount, string description, bool isPay = false)
+        public int ChargeWallet(string userName, int amount, string description, bool isPay = false)
         {
             Wallet wallet = new Wallet()
             {
@@ -211,12 +211,24 @@ namespace TopLearn.Core.Services
                 UserId = GetUserIdByUserName(userName)
             };
 
-            AddWallet(wallet);
+            return AddWallet(wallet);
         }
 
-        public void AddWallet(Wallet wallet)
+        public int AddWallet(Wallet wallet)
         {
             _context.Wallets.Add(wallet);
+            _context.SaveChanges();
+            return wallet.WalletId;
+        }
+
+        public Wallet GetWalletByWalletId(int walletId)
+        {
+            return _context.Wallets.Find(walletId);
+        }
+
+        public void UpdateWallet(Wallet wallet)
+        {
+            _context.Wallets.Update(wallet);
             _context.SaveChanges();
         }
     }

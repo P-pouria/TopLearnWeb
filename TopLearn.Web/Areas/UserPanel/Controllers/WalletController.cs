@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using TopLearn.Core.DTOs;
 using TopLearn.Core.Services.Interfaces;
 
@@ -10,11 +13,14 @@ namespace TopLearn.Web.Areas.UserPanel.Controllers
     [Authorize]
     public class WalletController : Controller
     {
-        private readonly IUserService _userService;
+        private IUserService _userService;
+
         public WalletController(IUserService userService)
         {
             _userService = userService;
         }
+
+
 
         [Route("UserPanel/Wallet")]
         public IActionResult Index()
@@ -25,7 +31,7 @@ namespace TopLearn.Web.Areas.UserPanel.Controllers
 
         [Route("UserPanel/Wallet")]
         [HttpPost]
-        public IActionResult Index(ChargeWalletViewModel charge)
+        public ActionResult Index(ChargeWalletViewModel charge)
         {
             if (!ModelState.IsValid)
             {
@@ -33,9 +39,23 @@ namespace TopLearn.Web.Areas.UserPanel.Controllers
                 return View(charge);
             }
 
-            _userService.ChargeWallet(User.Identity.Name, charge.Amount, "شارژ حساب");
+            int walletId = _userService.ChargeWallet(User.Identity.Name, charge.Amount, "شارژ حساب");
 
-            //ToDo OnlinePayment
+
+            #region Online Payment
+
+            var payment = new ZarinpalSandbox.Payment(charge.Amount);
+
+            var res = payment.PaymentRequest("شارژ کیف پول", "https://localhost:7119/OnlinePayment/" + walletId, "Info@topLearn.Com", "09362082496");
+
+            if (res.Result.Status == 100)
+            {
+                return Redirect("https://sandbox.zarinpal.com/pg/StartPay/" + res.Result.Authority);
+            }
+
+            #endregion
+
+
             return null;
         }
     }
