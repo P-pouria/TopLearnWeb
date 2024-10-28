@@ -42,5 +42,11 @@ namespace TopLearn.Core.Services.Interfaces
         Wallet GetWalletByWalletId(int walletId);
         void UpdateWallet(Wallet wallet);
         #endregion
+
+        #region Admin Panel
+
+        UserForAdminViewModel GetUsers(int pageId = 1, string filterEmail = "", string filterUserName = "");
+
+        #endregion
     }
 }
