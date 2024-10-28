@@ -16,6 +16,7 @@ namespace TopLearn.Core.Services.Interfaces
         int AddUser(User user);
         User LoginUser(LoginViewModel login);
         User GetUserByEmail(string email);
+        User GetUserById(int userId);
         User GetUserByActiveCode(string activeCode);
         User GetUserByUserName(string userName);
         void UpdateUser(User user);
@@ -46,8 +47,9 @@ namespace TopLearn.Core.Services.Interfaces
         #region Admin Panel
 
         UserForAdminViewModel GetUsers(int pageId = 1, string filterEmail = "", string filterUserName = "");
-
         int AddUserFormAdmin(CreateUserViewModel user);
+        EditUserViewModel GetUserForShowInEditMode(int userId);
+        void EditUserFromAdmin(EditUserViewModel editUser);
 
         #endregion
     }

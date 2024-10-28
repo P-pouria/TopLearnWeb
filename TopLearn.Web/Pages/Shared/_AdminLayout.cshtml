@@ -1,6 +1,6 @@
-﻿@* @using TopLearn.Core.Services.Interfaces
+﻿@using TopLearn.Core.Services.Interfaces
 
-@inject IPermissionService _PermissionService *@
+@inject IPermissionService _PermissionService
 
 <!DOCTYPE html>
 <html>
@@ -63,7 +63,7 @@
                         <li>
                             <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> مدیریت کاربران<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
-                                @* @if (_PermissionService.CheckPermission(1002, User.Identity.Name)) *@
+                              @*   @if (_PermissionService.CheckPermission(1002, User.Identity.Name)) *@
                                 {
                                     <li>
                                         <a href="/admin/roles">دسترسی ها</a>
