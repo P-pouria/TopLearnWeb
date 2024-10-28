@@ -11,6 +11,7 @@ using TopLearn.Core.Services.Interfaces;
 using TopLearn.DataLayer.Context;
 using TopLearn.DataLayer.Entities.User;
 using TopLearn.DataLayer.Entities.Wallet;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TopLearn.Core.Services
 {
@@ -258,6 +259,38 @@ namespace TopLearn.Core.Services
             };
 
             return list;
+        }
+
+        public int AddUserFormAdmin(CreateUserViewModel user)
+        {
+            User addUser = new User();
+            addUser.Password = PasswordHelper.EncodePasswordMd5(user.Password);
+            addUser.ActiveCode = NameGenerator.GenerateUniqCode();
+            addUser.Email = user.Email;
+            addUser.IsActive = true;
+            addUser.RegisterDate = DateTime.Now;
+            addUser.UserName=user.UserName; 
+
+            #region Save Avatar
+
+            if (user.UserAvatar!=null)
+            {
+                string imagePath = "";
+
+                addUser.UserAvatar = NameGenerator.GenerateUniqCode() + Path.GetExtension(user.UserAvatar.FileName);
+
+                imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/UserAvatar", addUser.UserAvatar);
+
+                using (var stream = new FileStream(imagePath, FileMode.Create))
+                {
+                    user.UserAvatar.CopyTo(stream);
+                }
+            }
+
+            #endregion
+
+            return AddUser(addUser);
+            
         }
     }
 }

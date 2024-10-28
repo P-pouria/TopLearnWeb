@@ -47,6 +47,8 @@ namespace TopLearn.Core.Services.Interfaces
 
         UserForAdminViewModel GetUsers(int pageId = 1, string filterEmail = "", string filterUserName = "");
 
+        int AddUserFormAdmin(CreateUserViewModel user);
+
         #endregion
     }
 }
