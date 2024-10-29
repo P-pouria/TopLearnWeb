@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -345,6 +346,55 @@ namespace TopLearn.Core.Services
             }
             _context.Users.Update(user);
             _context.SaveChanges();
+        }
+
+        public UserForAdminViewModel GetDeleteUsers(int pageId = 1, string filterEmail = "", string filterUserName = "")
+        {
+            IQueryable<User> result = _context.Users.IgnoreQueryFilters().Where(u => u.IsDelete);
+
+            if (!string.IsNullOrEmpty(filterEmail))
+            {
+                result = result.Where(u => u.Email.Contains(filterEmail));
+            }
+
+            if (!string.IsNullOrEmpty(filterUserName))
+            {
+                result = result.Where(u => u.UserName.Contains(filterUserName));
+            }
+
+            // Show Item In Page
+            int take = 20;
+            int skip = (pageId - 1) * take;
+
+
+            UserForAdminViewModel list = new UserForAdminViewModel();
+            list.CurrentPage = pageId;
+            list.PageCount = result.Count() / take;
+            list.Users = result.OrderBy(u => u.RegisterDate).Skip(skip).Take(take).ToList();
+
+            return list;
+        }
+
+        public void DeleteUser(int userId)
+        {
+            User user = GetUserById(userId);
+            user.IsDelete = true;
+            UpdateUser(user);
+        }
+
+        public InformationUserViewModel GetUserInformation(int userId)
+        {
+            var user = GetUserById(userId);
+
+            InformationUserViewModel information = new InformationUserViewModel()
+            {
+                UserName = user.UserName,
+                Email = user.Email,
+                RegisterDate = user.RegisterDate,
+                Wallet = BalanceUserWallet(user.UserName)
+            };
+
+            return information;
         }
     }
 }

@@ -41,6 +41,9 @@ namespace TopLearn.DataLayer.Context
                     .HasForeignKey(w => w.TypeId)  
                     .OnDelete(DeleteBehavior.Cascade);  
             });
+
+            modelBuilder.Entity<User>()
+                .HasQueryFilter(u => !u.IsDelete);
         }
     }
 }
