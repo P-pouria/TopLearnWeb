@@ -50,7 +50,7 @@ namespace TopLearn.Core.Services.Interfaces
 
         UserForAdminViewModel GetUsers(int pageId = 1, string filterEmail = "", string filterUserName = "");
         UserForAdminViewModel GetDeleteUsers(int pageId = 1, string filterEmail = "", string filterUserName = "");
-        int AddUserFormAdmin(CreateUserViewModel user);
+        int AddUserFromAdmin(CreateUserViewModel user);
         EditUserViewModel GetUserForShowInEditMode(int userId);
         void EditUserFromAdmin(EditUserViewModel editUser);
 

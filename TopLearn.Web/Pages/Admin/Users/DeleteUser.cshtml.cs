@@ -1,3 +1,7 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TopLearn.Core.DTOs;
@@ -8,13 +12,13 @@ namespace TopLearn.Web.Pages.Admin.Users
     public class DeleteUserModel : PageModel
     {
         private readonly IUserService _userService;
+
         public DeleteUserModel(IUserService userService)
         {
             _userService = userService;
         }
 
         public InformationUserViewModel InformationUserViewModel { get; set; }
-
         public void OnGet(int id)
         {
             ViewData["UserId"] = id;
@@ -24,7 +28,7 @@ namespace TopLearn.Web.Pages.Admin.Users
         public IActionResult OnPost(int UserId)
         {
             _userService.DeleteUser(UserId);
-            return Redirect("Index");
+            return RedirectToPage("Index");
         }
     }
 }

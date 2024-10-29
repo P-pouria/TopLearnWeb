@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,7 +11,7 @@ namespace TopLearn.Web.Pages.Admin.Users
 {
     public class ListDeleteUsersModel : PageModel
     {
-        private IUserService _userService;
+        private readonly IUserService _userService;
 
         public ListDeleteUsersModel(IUserService userService)
         {

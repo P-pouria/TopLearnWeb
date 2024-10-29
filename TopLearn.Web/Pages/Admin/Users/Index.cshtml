@@ -25,21 +25,21 @@
                         <div class="row">
                             <form>
                                 <div class="col-sm-5 col-md-5">
-                                    <input type="text" name="filterUserName" class="form-control" placeholder="نام کاربری" />
+                                    <input type="text" name="filterUserName" class="form-control" placeholder="نام کاربری"/>
                                 </div>
                                 <div class="col-sm-5 col-md-5">
-                                    <input type="text" name="filterEmail" class="form-control" placeholder="ایمیل" />
+                                    <input type="text" name="filterEmail" class="form-control" placeholder="ایمیل"/>
                                 </div>
                                 <div class="col-sm-2 col-md-2">
-                                    <button type="submit" class="btn btn-info">بگرد</button>
+                                    <button type="submit" class="btn btn-info" >بگرد</button>
                                     <a class="btn btn-default btn-sm" href="/Admin/Users">خالی</a>
                                 </div>
                             </form>
                         </div>
                         <div class="col-md-12" style="margin: 10px 0;">
-
-                            <a asp-page="CreateUser" class="btn btn-outline btn-success">افزودن کاربر جدید</a>
-
+                          
+                                <a asp-page="CreateUser" class="btn btn-outline btn-success">افزودن کاربر جدید</a>
+                           
                         </div>
                         <table class="table table-striped table-bordered table-hover dataTable no-footer" id="dataTables-example" aria-describedby="dataTables-example_info">
                             <thead>
@@ -83,17 +83,16 @@
                             <div class="col-sm-6">
                                 <div class="dataTables_paginate paging_simple_numbers" id="dataTables-example_paginate">
                                     <ul class="pagination">
-
-                                        @for (int i = 1; i <= Model.UserForAdminViewModel.PageCount; i++)
-                                        {
-                                            <li class="paginate_button @((i==Model.UserForAdminViewModel.CurrentPage)?"active":"")" aria-controls="dataTables-example" tabindex="0">
-                                                <a href="/Admin/Users?PageId=@i">@i</a>
-                                            </li>
-                                        }
+                                 
+                                       @for (int i = 1; i <= Model.UserForAdminViewModel.PageCount; i++)
+                                       {
+                                           <li class="paginate_button @((i==Model.UserForAdminViewModel.CurrentPage)?"active":"")" aria-controls="dataTables-example" tabindex="0">
+                                               <a href="/Admin/Users?PageId=@i">@i</a>
+                                           </li>
+                                       }
 
                                     </ul>
-                                </div>
-                            </div>
+                                </div></div>
                         </div>
                     </div>
                 </div>
