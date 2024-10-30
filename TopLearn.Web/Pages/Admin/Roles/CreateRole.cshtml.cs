@@ -1,10 +1,9 @@
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Security;
 using TopLearn.Core.Services.Interfaces;
-using TopLearn.DataLayer.Entities.User;
 using TopLearn.DataLayer.Entities.Permissions;
-using System.Collections.Generic;
+using TopLearn.DataLayer.Entities.User;
 
 namespace TopLearn.Web.Pages.Admin.Roles
 {
@@ -28,13 +27,15 @@ namespace TopLearn.Web.Pages.Admin.Roles
         public IActionResult OnPost(List<int> SelectedPermission)
         {
             if (!ModelState.IsValid)
-            {
                 return Page();
-            }
 
             Role.IsDelete = false;
             int roleId = _permissionService.AddRole(Role);
-            _permissionService.AddPermissionsToRole(roleId, SelectedPermission);
+
+            if (SelectedPermission != null && SelectedPermission.Count > 0)
+            {
+                _permissionService.AddPermissionsToRole(roleId, SelectedPermission);
+            }
 
             return RedirectToPage("Index");
         }

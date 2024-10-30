@@ -17,7 +17,7 @@ namespace TopLearn.Core.Services
 {
     public class UserService : IUserService
     {
-        private readonly TopLearnContext _context;
+        private TopLearnContext _context;
 
         public UserService(TopLearnContext context)
         {
@@ -308,7 +308,7 @@ namespace TopLearn.Core.Services
 
             return list;
         }
-        
+
         public int AddUserFromAdmin(CreateUserViewModel user)
         {
             User addUser = new User();

@@ -72,7 +72,7 @@ namespace TopLearn.Core.Services
 
         public List<Permission> GetAllPermission()
         {
-            return _context.Permission.ToList();
+            return _context.Permission?.ToList() ?? new List<Permission>();
         }
 
         public void AddPermissionsToRole(int roleId, List<int> permission)
