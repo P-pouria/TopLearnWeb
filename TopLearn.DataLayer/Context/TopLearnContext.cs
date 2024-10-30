@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TopLearn.DataLayer.Entities.Permissions;
 using TopLearn.DataLayer.Entities.User;
 using TopLearn.DataLayer.Entities.Wallet;
 
@@ -32,6 +33,13 @@ namespace TopLearn.DataLayer.Context
 
         #endregion
 
+        #region Permission
+
+        public DbSet<Permission> Permission { get; set; }
+        public DbSet<RolePermission> RolePermission { get; set; }
+
+        #endregion
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Wallet>(entity =>
@@ -44,6 +52,9 @@ namespace TopLearn.DataLayer.Context
 
             modelBuilder.Entity<User>()
                 .HasQueryFilter(u => !u.IsDelete);
+
+            modelBuilder.Entity<Role>()
+                .HasQueryFilter(r=>!r.IsDelete);
         }
     }
 }

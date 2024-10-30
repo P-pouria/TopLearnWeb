@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TopLearn.DataLayer.Context;
 
@@ -11,9 +12,11 @@ using TopLearn.DataLayer.Context;
 namespace TopLearn.DataLayer.Migrations
 {
     [DbContext(typeof(TopLearnContext))]
-    partial class TopLearnContextModelSnapshot : ModelSnapshot
+    [Migration("20241030141113_mig_IsDeleteRole")]
+    partial class mig_IsDeleteRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,52 +24,6 @@ namespace TopLearn.DataLayer.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("TopLearn.DataLayer.Entities.Permissions.Permission", b =>
-                {
-                    b.Property<int>("PermissionId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PermissionId"));
-
-                    b.Property<int?>("ParentID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("PermissionTitle")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("PermissionId");
-
-                    b.HasIndex("ParentID");
-
-                    b.ToTable("Permission");
-                });
-
-            modelBuilder.Entity("TopLearn.DataLayer.Entities.Permissions.RolePermission", b =>
-                {
-                    b.Property<int>("RP_Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RP_Id"));
-
-                    b.Property<int>("PermissionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.HasKey("RP_Id");
-
-                    b.HasIndex("PermissionId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("RolePermission");
-                });
 
             modelBuilder.Entity("TopLearn.DataLayer.Entities.User.Role", b =>
                 {
@@ -211,32 +168,6 @@ namespace TopLearn.DataLayer.Migrations
                     b.ToTable("WalletTypes");
                 });
 
-            modelBuilder.Entity("TopLearn.DataLayer.Entities.Permissions.Permission", b =>
-                {
-                    b.HasOne("TopLearn.DataLayer.Entities.Permissions.Permission", null)
-                        .WithMany("Permissions")
-                        .HasForeignKey("ParentID");
-                });
-
-            modelBuilder.Entity("TopLearn.DataLayer.Entities.Permissions.RolePermission", b =>
-                {
-                    b.HasOne("TopLearn.DataLayer.Entities.Permissions.Permission", "Permission")
-                        .WithMany("RolePermissions")
-                        .HasForeignKey("PermissionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("TopLearn.DataLayer.Entities.User.Role", "Role")
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Permission");
-
-                    b.Navigation("Role");
-                });
-
             modelBuilder.Entity("TopLearn.DataLayer.Entities.User.UserRole", b =>
                 {
                     b.HasOne("TopLearn.DataLayer.Entities.User.Role", "Role")
@@ -273,13 +204,6 @@ namespace TopLearn.DataLayer.Migrations
                     b.Navigation("User");
 
                     b.Navigation("WalletType");
-                });
-
-            modelBuilder.Entity("TopLearn.DataLayer.Entities.Permissions.Permission", b =>
-                {
-                    b.Navigation("Permissions");
-
-                    b.Navigation("RolePermissions");
                 });
 
             modelBuilder.Entity("TopLearn.DataLayer.Entities.User.Role", b =>

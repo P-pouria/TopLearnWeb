@@ -11,7 +11,7 @@ namespace TopLearn.Web.Pages.Admin.Users
 {
     public class IndexModel : PageModel
     {
-        private IUserService _userService;
+        private readonly IUserService _userService;
 
         public IndexModel(IUserService userService)
         {

@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using TopLearn.Core.Services.Interfaces
+
+@inject IPermissionService _PermissionService
+
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -37,7 +41,7 @@
             </div>
             <!-- /.navbar-header -->
 
-          
+
 
             <div class="navbar-default navbar-static-side" role="navigation">
                 <div class="sidebar-collapse">
@@ -59,9 +63,12 @@
                         <li>
                             <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> مدیریت کاربران<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
-                                <li>
-                                    <a href="flot.html">دسترسی ها</a>
-                                </li>
+                                @* @if (_PermissionService.CheckPermission(1002, User.Identity.Name)) *@
+                                @* { *@
+                                    <li>
+                                        <a href="/admin/roles">دسترسی ها</a>
+                                    </li>
+                                @* } *@
                                 <li>
                                     <a href="/admin/users">کاربران</a>
                                 </li>
@@ -71,7 +78,22 @@
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
-                   
+
+                        <li>
+                            <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> مدیریت دوره ها<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                                <li>
+                                    <a href="/admin/Courses">دوره ها</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/Discount">تخفیف ها</a>
+                                </li>
+                                <li>
+                                    <a href="/admin/CourseGroups"> گروه ها</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-second-level -->
+                        </li>
                     </ul>
                     <!-- /#side-menu -->
                 </div>
@@ -81,7 +103,7 @@
         </nav>
 
         <div id="page-wrapper">
-          @RenderBody()
+            @RenderBody()
         </div>
         <!-- /#page-wrapper -->
 
@@ -101,7 +123,7 @@
 
     <!-- Page-Level Demo Scripts - Dashboard - Use for reference -->
     <script src="/AdminContent/js/demo/dashboard-demo.js"></script>
-    @RenderSection("Scripts",false)
+    @RenderSection("Scripts", false)
 </body>
 
 </html>
