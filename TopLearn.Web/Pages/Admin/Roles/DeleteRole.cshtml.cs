@@ -10,7 +10,7 @@ using TopLearn.DataLayer.Entities.User;
 
 namespace TopLearn.Web.Pages.Admin.Roles
 {
-    [PermissionChecker(10)]
+    //[PermissionChecker(10)]
     public class DeleteRoleModel : PageModel
     {
         private IPermissionService _permissionService;

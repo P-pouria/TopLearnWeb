@@ -8,7 +8,7 @@ using TopLearn.DataLayer.Entities.User;
 
 namespace TopLearn.Web.Pages.Admin.Users
 {
-    [PermissionChecker(4)]
+    //[PermissionChecker(4)]
     public class EditUserModel : PageModel
     {
         private IUserService _userService;

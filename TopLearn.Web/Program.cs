@@ -23,6 +23,7 @@ builder.Services.AddAuthentication(options =>
     options.LoginPath = "/Login";
     options.LogoutPath = "/Logout";
     options.ExpireTimeSpan = TimeSpan.FromMinutes(43200);
+    options.SlidingExpiration = true;
 });
 
 #endregion
