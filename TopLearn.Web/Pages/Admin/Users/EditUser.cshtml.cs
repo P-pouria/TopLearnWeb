@@ -2,15 +2,17 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TopLearn.Core.DTOs;
+using TopLearn.Core.Security;
 using TopLearn.Core.Services.Interfaces;
 using TopLearn.DataLayer.Entities.User;
 
 namespace TopLearn.Web.Pages.Admin.Users
 {
+    [PermissionChecker(4)]
     public class EditUserModel : PageModel
     {
-        private readonly IUserService _userService;
-        private readonly IPermissionService _permissionService;
+        private IUserService _userService;
+        private IPermissionService _permissionService;
 
         public EditUserModel(IUserService userService, IPermissionService permissionService)
         {

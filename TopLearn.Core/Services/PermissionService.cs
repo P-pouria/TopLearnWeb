@@ -12,7 +12,7 @@ namespace TopLearn.Core.Services
 {
     public class PermissionService : IPermissionService
     {
-        private readonly TopLearnContext _context;
+        private TopLearnContext _context;
         public PermissionService(TopLearnContext context)
         {
             _context = context;
@@ -103,7 +103,28 @@ namespace TopLearn.Core.Services
                 .ToList()
                 .ForEach(p => _context.RolePermission.Remove(p));
 
-            AddPermissionsToRole(roleId,permissions);
+            AddPermissionsToRole(roleId, permissions);
+        }
+
+        public bool Checkpermission(int permissionId, string userName)
+        {
+            int userId = _context.Users.Single(u => u.UserName == userName).UserId;
+            List<int> UserRoles = _context.UserRoles
+                .Where(r => r.UserId == userId)
+                .Select(r => r.RoleId)
+                .ToList();
+
+            if (!UserRoles.Any())
+            {
+                return false;
+            }
+
+            List<int> RolesPermission = _context.RolePermission
+                .Where(p => p.PermissionId == permissionId)
+                .Select(p=>p.RoleId)
+                .ToList();
+
+            return RolesPermission.Any(p => UserRoles.Contains(p));
         }
     }
 }

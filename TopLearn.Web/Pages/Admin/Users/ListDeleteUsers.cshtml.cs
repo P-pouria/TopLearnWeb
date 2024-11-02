@@ -11,7 +11,7 @@ namespace TopLearn.Web.Pages.Admin.Users
 {
     public class ListDeleteUsersModel : PageModel
     {
-        private readonly IUserService _userService;
+        private IUserService _userService;
 
         public ListDeleteUsersModel(IUserService userService)
         {

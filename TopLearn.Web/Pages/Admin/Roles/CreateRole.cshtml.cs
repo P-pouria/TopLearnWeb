@@ -1,15 +1,17 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using TopLearn.Core.Security;
 using TopLearn.Core.Services.Interfaces;
 using TopLearn.DataLayer.Entities.Permissions;
 using TopLearn.DataLayer.Entities.User;
 
 namespace TopLearn.Web.Pages.Admin.Roles
 {
+    [PermissionChecker(8)]
     public class CreateRoleModel : PageModel
     {
-        private readonly IPermissionService _permissionService;
+        private IPermissionService _permissionService;
 
         public CreateRoleModel(IPermissionService permissionService)
         {
