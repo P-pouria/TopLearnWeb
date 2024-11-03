@@ -12,8 +12,8 @@ using TopLearn.DataLayer.Context;
 namespace TopLearn.DataLayer.Migrations
 {
     [DbContext(typeof(TopLearnContext))]
-    [Migration("20241030161915_UpdateRolePermissionRelations")]
-    partial class UpdateRolePermissionRelations
+    [Migration("20241103172358_InitialDataBase")]
+    partial class InitialDataBase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,32 @@ namespace TopLearn.DataLayer.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("TopLearn.DataLayer.Entities.Course.CourseGroup", b =>
+                {
+                    b.Property<int>("GroupId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("GroupId"));
+
+                    b.Property<string>("GroupTitle")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("ParentId")
+                        .HasColumnType("int");
+
+                    b.HasKey("GroupId");
+
+                    b.HasIndex("ParentId");
+
+                    b.ToTable("CourseGroups");
+                });
 
             modelBuilder.Entity("TopLearn.DataLayer.Entities.Permissions.Permission", b =>
                 {
@@ -214,6 +240,15 @@ namespace TopLearn.DataLayer.Migrations
                     b.ToTable("WalletTypes");
                 });
 
+            modelBuilder.Entity("TopLearn.DataLayer.Entities.Course.CourseGroup", b =>
+                {
+                    b.HasOne("TopLearn.DataLayer.Entities.Course.CourseGroup", "ParentGroup")
+                        .WithMany("CourseGroups")
+                        .HasForeignKey("ParentId");
+
+                    b.Navigation("ParentGroup");
+                });
+
             modelBuilder.Entity("TopLearn.DataLayer.Entities.Permissions.Permission", b =>
                 {
                     b.HasOne("TopLearn.DataLayer.Entities.Permissions.Permission", "ParentPermission")
@@ -278,6 +313,11 @@ namespace TopLearn.DataLayer.Migrations
                     b.Navigation("User");
 
                     b.Navigation("WalletType");
+                });
+
+            modelBuilder.Entity("TopLearn.DataLayer.Entities.Course.CourseGroup", b =>
+                {
+                    b.Navigation("CourseGroups");
                 });
 
             modelBuilder.Entity("TopLearn.DataLayer.Entities.Permissions.Permission", b =>
