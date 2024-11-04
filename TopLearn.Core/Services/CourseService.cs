@@ -21,7 +21,7 @@ namespace TopLearn.Core.Services
         public async Task<List<CourseGroup>> GetAllGroup()
         {
             return await _context.CourseGroups
-                         .Include(g => g.CourseGroups) // برای بارگذاری زیرگروه‌ها
+                         .Include(g => g.CourseGroups) 
                          .ToListAsync();
         }
 

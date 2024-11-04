@@ -42,9 +42,9 @@ builder.Services.AddDbContext<TopLearnContext>(options =>
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IViewRenderService, RenderViewToString>();
 builder.Services.AddTransient<IPermissionService, PermissionService>();
-builder.Services.AddScoped<ICourseService, CourseService>();
+builder.Services.AddTransient<ICourseService, CourseService>();
 
-//builder.Services.AddTransient<ICourseService, CourseService>();
+//builder.Services.AddScoped<ICourseService, CourseService>();
 //builder.Services.AddTransient<IOrderService, OrderService>();
 //builder.Services.AddTransient<IForumService, ForumService>();
 
