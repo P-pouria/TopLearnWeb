@@ -7,7 +7,7 @@ using TopLearn.DataLayer.Entities.User;
 
 namespace TopLearn.DataLayer.Entities.Permissions
 {
-   public class RolePermission
+    public class RolePermission
     {
         [Key]
         public int RP_Id { get; set; }

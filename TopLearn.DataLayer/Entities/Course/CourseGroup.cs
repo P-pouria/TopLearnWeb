@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -12,7 +11,7 @@ namespace TopLearn.DataLayer.Entities.Course
 
         [Display(Name = "عنوان گروه")]
         [Required(ErrorMessage = "لطفا {0} را وارد کنید")]
-        [MaxLength(200, ErrorMessage = "{0} نمی تواند بیشتر از {1} کاراکتر باشد .")]
+        [MaxLength(200, ErrorMessage = "{0} نمی تواند بیشتر از {1} کاراکتر باشد.")]
         public string GroupTitle { get; set; }
 
         [Display(Name = "حذف شده ؟")]
@@ -21,13 +20,18 @@ namespace TopLearn.DataLayer.Entities.Course
         [Display(Name = "گروه اصلی")]
         public int? ParentId { get; set; }
 
-
         #region Relations
 
         [ForeignKey("ParentId")]
         public CourseGroup ParentGroup { get; set; }
 
-        public ICollection<CourseGroup> CourseGroups { get; set; }
+        public ICollection<CourseGroup> CourseGroups { get; set; } // زیرگروه‌ها
+
+        [InverseProperty("CourseGroup")]
+        public List<Course> Courses { get; set; } // دوره‌های اصلی
+
+        [InverseProperty("SubCourseGroup")]
+        public List<Course> SubGroupCourses { get; set; } // دوره‌های زیرگروه
 
         #endregion
     }
