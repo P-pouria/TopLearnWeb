@@ -29,6 +29,10 @@ namespace TopLearn.DataLayer.Entities.Course
 
         public ICollection<CourseGroup> CourseGroups { get; set; }
 
+        public List<Course> Courses { get; set; }
+
+        public List<Course> SubGroup { get; set; }
+
         #endregion
     }
 }
