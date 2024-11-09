@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TopLearn.Core.DTOs.Course;
+using TopLearn.Core.Generator;
 using TopLearn.Core.Services.Interfaces;
 using TopLearn.DataLayer.Context;
 using TopLearn.DataLayer.Entities.Course;
@@ -78,5 +81,54 @@ namespace TopLearn.Core.Services
             }).ToList();
         }
 
+        public int AddCourse(Course course, IFormFile imgCourse, IFormFile courseDemo)
+        {
+            course.CreateDate = DateTime.Now;
+            course.CourseImageName = "no-photo.jpg";
+
+            //TODO Check Image
+            if (imgCourse != null/* && imgCourse.IsImage()*/)
+            {
+                course.CourseImageName = NameGenerator.GenerateUniqCode() + Path.GetExtension(imgCourse.FileName);
+                string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/course/image", course.CourseImageName);
+
+                using (var stream = new FileStream(imagePath, FileMode.Create))
+                {
+                    imgCourse.CopyTo(stream);
+                }
+
+                /* ImageConvertor imgResizer = new ImageConvertor();
+                 string thumbPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/course/thumb", course.CourseImageName);
+
+                 imgResizer.Image_resize(imagePath, thumbPath, 250);*/
+            }
+
+            //TODO Upload Demo
+            /* if (courseDemo != null)
+             {
+                 course.DemoFileName = NameGenerator.GenerateUniqCode() + Path.GetExtension(courseDemo.FileName);
+                 string demoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/course/demoes", course.DemoFileName);
+                 using (var stream = new FileStream(demoPath, FileMode.Create))
+                 {
+                     courseDemo.CopyTo(stream);
+                 }
+             }*/
+
+            _context.Add(course);
+            _context.SaveChanges();
+
+            return course.CourseId;
+        }
+
+        public List<ShowCourseForAdminViewModel> GetCoursesForAdmin()
+        {
+            return _context.Coueses.Select(c => new ShowCourseForAdminViewModel()
+            {
+                CourseId = c.CourseId,
+                ImageName = c.CourseImageName,
+                Title = c.CourseTitle,
+                EpisodeCount = c.CourseEpisodes.Count()
+            }).ToList();
+        }
     }
 }

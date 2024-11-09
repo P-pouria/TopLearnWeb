@@ -11,7 +11,7 @@ namespace TopLearn.Web.Pages.Admin.Courses
         private ICourseService _courseService;
         public CreateCourseModel(ICourseService courseService)
         {
-            _courseService =courseService;
+            _courseService = courseService;
         }
 
         [BindProperty]
@@ -33,6 +33,18 @@ namespace TopLearn.Web.Pages.Admin.Courses
 
             var statues = _courseService.GetStatus();
             ViewData["Statues"] = new SelectList(statues, "Value", "Text");
+        }
+
+        public IActionResult OnPost(IFormFile imgCourseUp, IFormFile demoUp)
+        {
+            if (!ModelState.IsValid)
+            {
+                return Page();
+            }
+
+            _courseService.AddCourse(Course,imgCourseUp,demoUp);
+
+            return RedirectToPage("Index");
         }
     }
 }
