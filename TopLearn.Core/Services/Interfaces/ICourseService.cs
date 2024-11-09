@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,12 @@ namespace TopLearn.Core.Services.Interfaces
         #region Group
 
         Task<List<CourseGroup>> GetAllGroup();
+        List<SelectListItem> GetGroupForManageCourse();
+        List<SelectListItem> GetSubGroupForManageCourse(int groupId);
+        List<SelectListItem> GetTeachers();
+        List<SelectListItem> GetLevels();
+        List<SelectListItem> GetStatus();
+
 
         #endregion
     }
