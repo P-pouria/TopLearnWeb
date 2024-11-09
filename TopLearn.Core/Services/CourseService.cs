@@ -6,8 +6,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TopLearn.Core.Convertors;
 using TopLearn.Core.DTOs.Course;
 using TopLearn.Core.Generator;
+using TopLearn.Core.Security;
 using TopLearn.Core.Services.Interfaces;
 using TopLearn.DataLayer.Context;
 using TopLearn.DataLayer.Entities.Course;
@@ -87,7 +89,7 @@ namespace TopLearn.Core.Services
             course.CourseImageName = "no-photo.jpg";
 
             //TODO Check Image
-            if (imgCourse != null/* && imgCourse.IsImage()*/)
+            if (imgCourse != null && imgCourse.IsImage())
             {
                 course.CourseImageName = NameGenerator.GenerateUniqCode() + Path.GetExtension(imgCourse.FileName);
                 string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/course/image", course.CourseImageName);
@@ -97,22 +99,23 @@ namespace TopLearn.Core.Services
                     imgCourse.CopyTo(stream);
                 }
 
-                /* ImageConvertor imgResizer = new ImageConvertor();
-                 string thumbPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/course/thumb", course.CourseImageName);
+                //TODO Image Resize
+                ImageConvertor imgResizer = new ImageConvertor();
+                string thumbPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/course/thumb", course.CourseImageName);
 
-                 imgResizer.Image_resize(imagePath, thumbPath, 250);*/
+                imgResizer.Image_resize(imagePath, thumbPath, 250);
             }
 
             //TODO Upload Demo
-            /* if (courseDemo != null)
-             {
-                 course.DemoFileName = NameGenerator.GenerateUniqCode() + Path.GetExtension(courseDemo.FileName);
-                 string demoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/course/demoes", course.DemoFileName);
-                 using (var stream = new FileStream(demoPath, FileMode.Create))
-                 {
-                     courseDemo.CopyTo(stream);
-                 }
-             }*/
+            if (courseDemo != null)
+            {
+                course.DemoFileName = NameGenerator.GenerateUniqCode() + Path.GetExtension(courseDemo.FileName);
+                string demoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/course/demoes", course.DemoFileName);
+                using (var stream = new FileStream(demoPath, FileMode.Create))
+                {
+                    courseDemo.CopyTo(stream);
+                }
+            }
 
             _context.Add(course);
             _context.SaveChanges();
