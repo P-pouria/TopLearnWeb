@@ -21,7 +21,10 @@ namespace TopLearn.Web.Controllers
             _courseService = courseService;
         }
 
-        public IActionResult Index() => View();
+        public IActionResult Index()
+        {
+            return View(_courseService.GetCourse());  
+        }
 
 
 

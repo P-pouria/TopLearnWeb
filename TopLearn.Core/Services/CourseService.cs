@@ -249,5 +249,72 @@ namespace TopLearn.Core.Services
             _context.CourseEpisodes.Update(episode);
             _context.SaveChanges();
         }
+
+        public List<ShowCourseListItemViewModel> GetCourse(int pageId = 1, string filter = "", string getType = "all", string orderByType = "date", int startPrice = 0, int endPrice = 0, List<int> selectedGroups = null, int take = 0)
+        {
+            if (take == 0)
+                take = 8;
+
+            IQueryable<Course> result = _context.Coueses;
+
+            if (!string.IsNullOrEmpty(filter))
+            {
+                result = result.Where(c => c.CourseTitle.Contains(filter));
+            }
+
+            switch (getType)
+            {
+                case "all":
+                    break;
+                case "buy":
+                    result = result.Where(c => c.CoursePrice != 0);
+                    break;
+                case "free":
+                    result = result.Where(c => c.CoursePrice == 0);
+                    break;
+            }
+
+            switch (orderByType)
+            {
+                case "date":
+                    result = result.OrderByDescending(c => c.CreateDate);
+                    break;
+                case "updatedate":
+                    result = result.OrderByDescending(c => c.UpdateDate);
+                    break;
+            }
+
+            if (startPrice > 0)
+            {
+                result = result.Where(c => c.CoursePrice > startPrice);
+            }
+
+            if (endPrice > 0)
+            {
+                result = result.Where(c => c.CoursePrice < endPrice);
+            }
+
+            if (selectedGroups != null && selectedGroups.Any())
+            {
+                // TODO: Add filter for selectedGroups
+            }
+
+            int skip = (pageId - 1) * take;
+
+            return result.Include(c => c.CourseEpisodes)
+                         .AsEnumerable() // Switch to client-side evaluation
+                         .Select(c => new ShowCourseListItemViewModel()
+                         {
+                             CourseId = c.CourseId,
+                             ImageName = c.CourseImageName,
+                             Price = c.CoursePrice,
+                             Title = c.CourseTitle,
+                             TotalTime = new TimeSpan(c.CourseEpisodes.Sum(e => e.EpisodeTime.Ticks))
+                         })
+                         .Skip(skip)
+                         .Take(take)
+                         .ToList();
+        }
+
     }
 }

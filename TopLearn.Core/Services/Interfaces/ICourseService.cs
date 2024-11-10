@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using MailKit.Search;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,8 @@ namespace TopLearn.Core.Services.Interfaces
         List<ShowCourseForAdminViewModel> GetCoursesForAdmin();
         Course GetCourseById(int courseId);
         void UpdateCourse(Course course, IFormFile imgCourse, IFormFile courseDemo);
+
+        List<ShowCourseListItemViewModel> GetCourse(int pageId = 1, string filter = "", string getType = "all", string orderByType = "date", int startPrice = 0, int endPrice = 0, List<int> selectedGroups = null, int take = 0);
 
         #endregion
 
