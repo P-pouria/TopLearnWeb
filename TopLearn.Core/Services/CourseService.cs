@@ -145,7 +145,7 @@ namespace TopLearn.Core.Services
 
             if (imgCourse != null && imgCourse.IsImage())
             {
-                if(course.CourseImageName != "no-photo.jpg")
+                if (course.CourseImageName != "no-photo.jpg")
                 {
                     string deleteImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/course/image", course.CourseImageName);
                     if (File.Exists(deleteImagePath))
@@ -177,7 +177,7 @@ namespace TopLearn.Core.Services
             //TODO Upload Demo
             if (courseDemo != null)
             {
-                if(course.DemoFileName!=null)
+                if (course.DemoFileName != null)
                 {
                     string deleteDemoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/course/demoes", course.DemoFileName);
                     if (File.Exists(deleteDemoPath))
@@ -194,6 +194,59 @@ namespace TopLearn.Core.Services
             }
 
             _context.Coueses.Update(course);
+            _context.SaveChanges();
+        }
+
+        public List<CourseEpisode> GetListEpisodeCourse(int courseId)
+        {
+            return _context.CourseEpisodes.Where(c => c.CourseId == courseId).ToList();
+        }
+
+        public bool CheckExistFile(string fileName)
+        {
+            string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/courseFiles", fileName);
+
+            return File.Exists(path);
+        }
+
+        public int AddEpisode(CourseEpisode episode, IFormFile episodeFile)
+        {
+            episode.EpisodeFileName = episodeFile.FileName;
+
+
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/courseFiles", episode.EpisodeFileName);
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                episodeFile.CopyTo(stream);
+            }
+
+            _context.CourseEpisodes.Add(episode);
+            _context.SaveChanges();
+            return episode.EpisodeId;
+        }
+
+        public CourseEpisode GetEpisodeById(int episodeId)
+        {
+            return _context.CourseEpisodes.Find(episodeId);
+        }
+
+        public void EditEpisode(CourseEpisode episode, IFormFile episodeFile)
+        {
+            if (episodeFile != null)
+            {
+                string deleteFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/courseFiles", episode.EpisodeFileName);
+                File.Delete(deleteFilePath);
+
+
+                episode.EpisodeFileName = episodeFile.FileName;
+                string filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/courseFiles", episode.EpisodeFileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    episodeFile.CopyTo(stream);
+                }
+            }
+
+            _context.CourseEpisodes.Update(episode);
             _context.SaveChanges();
         }
     }
