@@ -250,7 +250,7 @@ namespace TopLearn.Core.Services
             _context.SaveChanges();
         }
 
-        public List<ShowCourseListItemViewModel> GetCourse(int pageId = 1, string filter = "", string getType = "all", string orderByType = "date", int startPrice = 0, int endPrice = 0, List<int> selectedGroups = null, int take = 0)
+        public Tuple<List<ShowCourseListItemViewModel>, int> GetCourse(int pageId = 1, string filter = "", string getType = "all", string orderByType = "date", int startPrice = 0, int endPrice = 0, List<int> selectedGroups = null, int take = 0)
         {
             if (take == 0)
                 take = 8;
@@ -296,24 +296,32 @@ namespace TopLearn.Core.Services
 
             if (selectedGroups != null && selectedGroups.Any())
             {
-                // TODO: Add filter for selectedGroups
+                foreach (int groupId in selectedGroups)
+                {
+                    result = result.Where(c => c.GroupId == groupId || c.SubGroup == groupId);
+                }
             }
 
             int skip = (pageId - 1) * take;
 
-            return result.Include(c => c.CourseEpisodes)
-                         .AsEnumerable() // Switch to client-side evaluation
-                         .Select(c => new ShowCourseListItemViewModel()
-                         {
-                             CourseId = c.CourseId,
-                             ImageName = c.CourseImageName,
-                             Price = c.CoursePrice,
-                             Title = c.CourseTitle,
-                             TotalTime = new TimeSpan(c.CourseEpisodes.Sum(e => e.EpisodeTime.Ticks))
-                         })
-                         .Skip(skip)
-                         .Take(take)
-                         .ToList();
+           
+            var courses = result.Include(c => c.CourseEpisodes)
+                                .Skip(skip)
+                                .Take(take)
+                                .ToList();
+
+            var query = courses.Select(c => new ShowCourseListItemViewModel()
+            {
+                CourseId = c.CourseId,
+                ImageName = c.CourseImageName,
+                Price = c.CoursePrice,
+                Title = c.CourseTitle,
+                TotalTime = new TimeSpan(c.CourseEpisodes.Sum(e => e.EpisodeTime.Ticks))
+            }).ToList();
+
+            int pageCount = result.Count() / take;
+
+            return Tuple.Create(query, pageCount);
         }
 
     }
