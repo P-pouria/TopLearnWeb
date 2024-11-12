@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TopLearn.Core.Services.Interfaces;
+using TopLearn.DataLayer.Entities.Course;
 
 namespace TopLearn.Web.Controllers
 {
@@ -17,13 +18,20 @@ namespace TopLearn.Web.Controllers
             ViewBag.Groups = _courseService.GetAllGroup();
             ViewBag.pageId = pageId;
 
-            // ارسال Tuple که شامل لیست دوره‌ها و تعداد کل نتایج است
             var coursesData = _courseService.GetCourse(pageId, filter, getType, orderByType, startPrice, endPrice, selectedGroups, 9);
 
-            // ارسال داده‌ها به ویو
             return View(coursesData);
         }
 
-
+        [Route("ShowCourse/{id}")]
+        public IActionResult ShowCoruse(int id)
+        {
+            var course =_courseService.GetCourseForShow(id);
+            if(course==null)
+            {
+                return NotFound();
+            }
+            return View(course);
+        }
     }
 }

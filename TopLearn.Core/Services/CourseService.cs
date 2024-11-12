@@ -259,7 +259,7 @@ namespace TopLearn.Core.Services
 
             if (!string.IsNullOrEmpty(filter))
             {
-                result = result.Where(c => c.CourseTitle.Contains(filter));
+                result = result.Where(c => c.CourseTitle.Contains(filter)||c.Tags.Contains(filter));
             }
 
             switch (getType)
@@ -324,5 +324,14 @@ namespace TopLearn.Core.Services
             return Tuple.Create(query, pageCount);
         }
 
+        public Course GetCourseForShow(int courseId)
+        {
+            return _context.Coueses
+                .Include(c => c.CourseEpisodes)
+                .Include(c => c.CourseStatus)
+                .Include(c => c.CourseLevel)
+                .Include(c => c.User)
+                .FirstOrDefault(c => c.CourseId == courseId);
+        }
     }
 }
