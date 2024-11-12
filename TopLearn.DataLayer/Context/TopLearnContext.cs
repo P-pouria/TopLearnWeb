@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TopLearn.DataLayer.Entities.Course;
+using TopLearn.DataLayer.Entities.Order;
 using TopLearn.DataLayer.Entities.Permissions;
 using TopLearn.DataLayer.Entities.User;
 using TopLearn.DataLayer.Entities.Wallet;
@@ -43,44 +44,61 @@ namespace TopLearn.DataLayer.Context
 
         #endregion
 
+        #region Order
+
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderDetail> OrderDetails { get; set; }
+
+        #endregion
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            var cascadeFKs = modelBuilder.Model.GetEntityTypes()
+                .SelectMany(t => t.GetForeignKeys())
+                .Where(fk => !fk.IsOwnership && fk.DeleteBehavior == DeleteBehavior.Cascade);
+
+            foreach (var fk in cascadeFKs)
+            {
+                fk.DeleteBehavior = DeleteBehavior.Restrict;
+            }
+
+
             #region Course
 
             modelBuilder.Entity<Course>()
                 .HasOne(c => c.CourseGroup)
                 .WithMany(g => g.Courses)
                 .HasForeignKey(c => c.GroupId)
-                .OnDelete(DeleteBehavior.Restrict); 
-            
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<Course>()
                 .HasOne(c => c.Group)
                 .WithMany(g => g.SubGroup)
                 .HasForeignKey(c => c.SubGroup)
-                .OnDelete(DeleteBehavior.Restrict); 
-
-            modelBuilder.Entity<Course>()
-                .HasOne(c=>c.CourseStatus)
-                .WithMany(c=>c.Courses)
-                .HasForeignKey(c => c.StatusId)
-                .OnDelete(DeleteBehavior.Restrict); 
-
-            modelBuilder.Entity<Course>()
-                .HasOne(c=>c.CourseLevel)
-                .WithMany(c=>c.Courses)
-                .HasForeignKey(c=>c.LevelId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Course>()
-                .HasMany(c => c.CourseEpisodes)          
-                .WithOne(e => e.Course)                  
-                .HasForeignKey(e => e.CourseId)         
-                .OnDelete(DeleteBehavior.Cascade);
-            
+                .HasOne(c => c.CourseStatus)
+                .WithMany(c => c.Courses)
+                .HasForeignKey(c => c.StatusId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<Course>()
-                .HasOne(c=>c.User)
-                .WithMany(c=>c.Courses)
-                .HasForeignKey(c=>c.TeacherId)
+                .HasOne(c => c.CourseLevel)
+                .WithMany(c => c.Courses)
+                .HasForeignKey(c => c.LevelId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Course>()
+                .HasMany(c => c.CourseEpisodes)
+                .WithOne(e => e.Course)
+                .HasForeignKey(e => e.CourseId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Course>()
+                .HasOne(c => c.User)
+                .WithMany(c => c.Courses)
+                .HasForeignKey(c => c.TeacherId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             #endregion
@@ -117,12 +135,39 @@ namespace TopLearn.DataLayer.Context
             modelBuilder.Entity<User>()
                 .HasQueryFilter(u => !u.IsDelete);
 
+
             #endregion
 
             #region Role
 
             modelBuilder.Entity<Role>()
                 .HasQueryFilter(r => !r.IsDelete);
+
+            #endregion
+
+            #region Order
+
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.User)
+                .WithMany(o => o.Orders)
+                .HasForeignKey(o => o.UserId);
+                
+
+            #endregion
+
+            #region OrderDetail
+
+            modelBuilder.Entity<OrderDetail>()
+                .HasOne(o => o.Order)
+                .WithMany(o => o.OrderDetails)
+                .HasForeignKey(o => o.OrderId);
+                
+
+            modelBuilder.Entity<OrderDetail>()
+                .HasOne(o => o.Course)
+                .WithMany(o => o.OrderDetails)
+                .HasForeignKey(o => o.CourseId);
+                
 
             #endregion
         }
