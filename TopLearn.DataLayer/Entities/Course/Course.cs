@@ -70,6 +70,7 @@ namespace TopLearn.DataLayer.Entities.Course
         public List<CourseEpisode> CourseEpisodes { get; set; }
 
         public List<OrderDetail> OrderDetails { get; set; }
+        public List<UserCourse> UserCourses { get; set; }
 
         #endregion
     }

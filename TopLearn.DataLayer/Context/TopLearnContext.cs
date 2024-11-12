@@ -41,6 +41,7 @@ namespace TopLearn.DataLayer.Context
         public DbSet<CourseEpisode> CourseEpisodes { get; set; }
         public DbSet<CourseLevel> CourseLevels { get; set; }
         public DbSet<CourseStatus> CourseStatuses { get; set; }
+        public DbSet<UserCourse> UserCourses { get; set; }
 
         #endregion
 
@@ -167,7 +168,21 @@ namespace TopLearn.DataLayer.Context
                 .HasOne(o => o.Course)
                 .WithMany(o => o.OrderDetails)
                 .HasForeignKey(o => o.CourseId);
-                
+
+
+            #endregion
+
+            #region UserCourse
+
+            modelBuilder.Entity<UserCourse>()
+                .HasOne(uc=>uc.Course)
+                .WithMany(uc=>uc.UserCourses)
+                .HasForeignKey(uc=>uc.CourseId);
+
+            modelBuilder.Entity<UserCourse>()
+               .HasOne(uc => uc.User)
+               .WithMany(uc => uc.UserCourses)
+               .HasForeignKey(uc => uc.UserId);
 
             #endregion
         }
