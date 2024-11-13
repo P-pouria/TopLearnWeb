@@ -5,7 +5,7 @@
 
 @{
     ViewData["Title"] = "ShowOrder";
-    int sumOrder = Model.OrderDetails.Sum(od => od.Price * od.Count);
+    int sumOrder = Model.OrderSum;
 }
 
 <div class="container">
@@ -61,8 +61,11 @@
                                     <tr>
                                         <td colspan="3" class="text-left">کد تخفیف</td>
                                         <td>
-                                            <input type="text" class="form-control" />
-                                            <input type="submit" class="btn btn-primary btn-block" style="margin-top: 5px" value="اعمال" />
+                                            <form action="/UserPanel/MyOrders/UseDiscount" method="post">
+                                                <input type="hidden" name="orderid" value="@Model.OrderId" />
+                                                <input type="text" name="code" class="form-control" />
+                                                <input type="submit" class="btn btn-primary btn-block" style="margin-top: 5px" value="اعمال" />
+                                            </form>
                                         </td>
                                     </tr>
                                 }

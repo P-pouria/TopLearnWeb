@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TopLearn.DataLayer.Context;
 
@@ -11,9 +12,11 @@ using TopLearn.DataLayer.Context;
 namespace TopLearn.DataLayer.Migrations
 {
     [DbContext(typeof(TopLearnContext))]
-    partial class TopLearnContextModelSnapshot : ModelSnapshot
+    [Migration("20241113152229_mig_Discount")]
+    partial class mig_Discount
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -219,16 +222,16 @@ namespace TopLearn.DataLayer.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DiscountId"));
 
-                    b.Property<string>("DiscountCode")
+                    b.Property<string>("DiscountCount")
                         .IsRequired()
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.Property<int>("DiscountPercent")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("EndDate")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("Percent")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("StartDate")
                         .HasColumnType("datetime2");

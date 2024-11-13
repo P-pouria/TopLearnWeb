@@ -8,6 +8,8 @@ using TopLearn.DataLayer.Context;
 using TopLearn.DataLayer.Entities.Order;
 using TopLearn.DataLayer.Entities.Wallet;
 using TopLearn.DataLayer.Entities.Course;
+using Microsoft.AspNetCore.Http.HttpResults;
+using TopLearn.Core.DTOs.Order;
 
 namespace TopLearn.Core.Services
 {
@@ -132,8 +134,8 @@ namespace TopLearn.Core.Services
                 {
                     _context.UserCourses.Add(new UserCourse()
                     {
-                        CourseId=detail.CourseId,
-                        UserId=userId
+                        CourseId = detail.CourseId,
+                        UserId = userId
                     });
                 }
 
@@ -142,6 +144,58 @@ namespace TopLearn.Core.Services
             }
 
             return false;
+        }
+
+        public List<Order> GetUserOrders(string userName)
+        {
+            int userId = _userService.GetUserIdByUserName(userName);
+
+            return _context.Orders
+                .Where(o => o.UserId == userId)
+                .ToList();
+        }
+
+        public DiscountUseType UseDiscount(int orderId, string code)
+        {
+            var discount = _context.Discounts.SingleOrDefault(d => d.DiscountCode == code);
+            if (discount == null)
+                return DiscountUseType.NotFound;
+
+            if (discount.StartDate != null && discount.StartDate < DateTime.Now)
+                return DiscountUseType.ExpierDate;
+
+            if (discount.EndDate != null && discount.EndDate >= DateTime.Now)
+                return DiscountUseType.ExpierDate;
+
+            if (discount.DiscountCode != null && discount.UsableCount < 1)
+                return DiscountUseType.Finished;
+
+            var order = GetOrderById(orderId);
+
+            int percent = (order.OrderSum * discount.DiscountPercent) / 100;
+            order.OrderSum = order.OrderSum - percent;
+
+            UpdateOrder(order);
+
+            if (discount.UsableCount != null)
+            {
+                discount.UsableCount -= 1;
+            }
+            _context.Discounts.Update(discount);
+            _context.SaveChanges();
+
+            return DiscountUseType.Success;
+        }
+
+        public Order GetOrderById(int orderId)
+        {
+            return _context.Orders.Find(orderId);
+        }
+
+        public void UpdateOrder(Order order)
+        {
+            _context.Orders.Update(order);
+            _context.SaveChanges();
         }
     }
 }

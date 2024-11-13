@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TopLearn.Core.DTOs.Order;
 using TopLearn.Core.Services.Interfaces;
 
 namespace TopLearn.Web.Areas.UserPanel.Controllers
@@ -16,7 +17,7 @@ namespace TopLearn.Web.Areas.UserPanel.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return View(_orderService.GetUserOrders(User.Identity.Name));
         }
 
         public IActionResult ShowOrder(int id, bool finaly = false)
@@ -36,10 +37,16 @@ namespace TopLearn.Web.Areas.UserPanel.Controllers
         {
             if (_orderService.FinalyOrder(User.Identity.Name, id))
             {
-                return Redirect("/UserPanel/MyOrders/" + id + "?finaly=true");
+                return Redirect("/UserPanel/MyOrders/ShowOrder" + id + "?finaly=true");
             }
 
             return BadRequest();
+        }
+
+        public IActionResult UseDiscount(int orderId, string code)
+        {
+            DiscountUseType type = _orderService.UseDiscount(orderId, code);
+            return Redirect("/userPanel/MyOrders/ShowOrder/" + orderId + "?type=" + type.ToString());
         }
     }
 }
