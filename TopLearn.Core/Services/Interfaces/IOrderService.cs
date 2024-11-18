@@ -21,6 +21,10 @@ namespace TopLearn.Core.Services.Interfaces
         #region Discount
 
         DiscountUseType UseDiscount(int orderId, string code);
+        void AddDiscount(Discount discount);
+        List<Discount> GetAllDiscounts();
+        Discount GetDiscountById(int discountId);
+        void UpdateDiscount(Discount discount);
 
         #endregion
     }

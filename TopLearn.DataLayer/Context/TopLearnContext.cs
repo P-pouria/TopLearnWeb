@@ -18,6 +18,7 @@ namespace TopLearn.DataLayer.Context
         public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
+        public DbSet<UserDiscountCode> UserDiscountCodes { get; set; }
 
         #endregion
 
@@ -184,6 +185,20 @@ namespace TopLearn.DataLayer.Context
                .HasOne(uc => uc.User)
                .WithMany(uc => uc.UserCourses)
                .HasForeignKey(uc => uc.UserId);
+
+            #endregion
+
+            #region
+
+            modelBuilder.Entity<UserDiscountCode>()
+                .HasOne(u=>u.User)
+                .WithMany(u=>u.UserDiscountCodes)
+                .HasForeignKey(u => u.UserId);
+
+            modelBuilder.Entity<UserDiscountCode>()
+                .HasOne(u => u.Discount)
+                .WithMany(u => u.UserDiscountCodes)
+                .HasForeignKey(u => u.DiscountId);
 
             #endregion
         }

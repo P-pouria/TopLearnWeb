@@ -8,6 +8,7 @@ using TopLearn.DataLayer.Context;
 using TopLearn.DataLayer.Entities.Order;
 using TopLearn.DataLayer.Entities.Wallet;
 using TopLearn.DataLayer.Entities.Course;
+using TopLearn.DataLayer.Entities.User;
 using Microsoft.AspNetCore.Http.HttpResults;
 using TopLearn.Core.DTOs.Order;
 
@@ -172,6 +173,9 @@ namespace TopLearn.Core.Services
 
             var order = GetOrderById(orderId);
 
+            if (_context.UserDiscountCodes.Any(d => d.UserId == order.UserId && d.DiscountId == discount.DiscountId))
+                return DiscountUseType.UserUsed;
+
             int percent = (order.OrderSum * discount.DiscountPercent) / 100;
             order.OrderSum = order.OrderSum - percent;
 
@@ -182,6 +186,13 @@ namespace TopLearn.Core.Services
                 discount.UsableCount -= 1;
             }
             _context.Discounts.Update(discount);
+
+            _context.UserDiscountCodes.Add(new UserDiscountCode()
+            {
+                UserId = order.UserId,
+                DiscountId = discount.DiscountId
+            });
+
             _context.SaveChanges();
 
             return DiscountUseType.Success;
@@ -195,6 +206,28 @@ namespace TopLearn.Core.Services
         public void UpdateOrder(Order order)
         {
             _context.Orders.Update(order);
+            _context.SaveChanges();
+        }
+
+        public void AddDiscount(Discount discount)
+        {
+            _context.Discounts.Add(discount);   
+            _context.SaveChanges();
+        }
+
+        public List<Discount> GetAllDiscounts()
+        {
+            return _context.Discounts.ToList();
+        }
+
+        public Discount GetDiscountById(int discountId)
+        {
+            return _context.Discounts.Find(discountId);
+        }
+
+        public void UpdateDiscount(Discount discount)
+        {
+            _context.Discounts.Update(discount);
             _context.SaveChanges();
         }
     }
