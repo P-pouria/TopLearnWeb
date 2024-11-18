@@ -17,6 +17,7 @@ namespace TopLearn.Core.Services.Interfaces
         bool FinalyOrder(string userName, int orderId);
         List<Order> GetUserOrders(string userName);
         void UpdateOrder(Order order);
+        bool IsUserInCourse(string userName, int courseId);
 
         #region Discount
 
@@ -25,6 +26,7 @@ namespace TopLearn.Core.Services.Interfaces
         List<Discount> GetAllDiscounts();
         Discount GetDiscountById(int discountId);
         void UpdateDiscount(Discount discount);
+        bool IsExistCode(string code);  
 
         #endregion
     }

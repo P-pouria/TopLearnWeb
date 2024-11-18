@@ -18,7 +18,7 @@ namespace TopLearn.Web.Pages.Admin.Discount
             _orderService = orderService;
         }
 
-        
+
 
         [BindProperty]
         public DataLayer.Entities.Order.Discount Discount { get; set; }
@@ -28,12 +28,12 @@ namespace TopLearn.Web.Pages.Admin.Discount
         }
 
 
-        public IActionResult OnPost(string stDate="",string edDate="")
+        public IActionResult OnPost(string stDate = "", string edDate = "")
         {
             if (stDate != "")
             {
                 string[] std = stDate.Split('/');
-                Discount.StartDate=new DateTime(int.Parse(std[0]),
+                Discount.StartDate = new DateTime(int.Parse(std[0]),
                     int.Parse(std[1]),
                     int.Parse(std[2]),
                     new PersianCalendar()
@@ -50,13 +50,20 @@ namespace TopLearn.Web.Pages.Admin.Discount
                 );
             }
 
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid && _orderService.IsExistCode(Discount.DiscountCode))
                 return Page();
 
             _orderService.AddDiscount(Discount);
 
             return RedirectToPage("Index");
 
+        }
+
+        //admin/discount/creatediscount?handler=checkcode
+        //admin/discount/creatediscount/checkcode
+        public IActionResult OnGetCheckCode(string code)
+        {
+            return Content(_orderService.IsExistCode(code).ToString());
         }
     }
 }
