@@ -81,120 +81,36 @@
                 <section class="user-comments">
                     <header><h3> نظرات کاربران </h3></header>
                     <div class="inner">
-                        <form>
-                            <div class="row">
-                                <div class="col-md-4 col-sm-12 col-xs-12">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" placeholder="نام و نام خانوادگی">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" placeholder="ایمیل">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" placeholder="شماره تماس">
-                                    </div>
-                                </div>
-                                <div class="col-md-8 col-sm-12 col-xs-12">
-                                    <div class="form-group">
-                                        <textarea class="form-control" placeholder="متن نظر"></textarea>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-8 col-sm-7 col-xs-7">
-                                            <div class="form-group">
-                                                <input type="text" class="form-control" placeholder="کد امنیتی">
-                                            </div>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <form asp-controller="Course" asp-action="CreateComment"
+                                  data-ajax="true"
+                                  data-ajax-method="post"
+                                  data-ajax-mode="replace"
+                                  data-ajax-update="#listComment"
+                                  data-ajax-success="Success">
+                                <input type="hidden" name="comment.CourseId" value="@Model.CourseId" />
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <div class="form-group">
+                                            <textarea class="form-control" id="comment_Comment" name="comment.Comment" placeholder="متن نظر"></textarea>
                                         </div>
-                                        <div class="col-md-4 col-sm-5 col-xs-5">
-                                            <img src="images/captcha.jpg">
-                                        </div>
+
+                                    </div>
+                                    <div class="col-xs-12">
+                                        <button type="submit" class="btn btn-success"> ثبت دیدگاه </button>
                                     </div>
                                 </div>
-                                <div class="col-xs-12">
-                                    <button type="submit" class="btn btn-success"> ثبت دیدگاه </button>
-                                </div>
+                            </form>
+                        }
+                        else
+                        {
+                            <div class="alert alert-danger">
+                                جهت درج نظر باید وارد سایت شوید
                             </div>
-                        </form>
+                        }
 
-                        <div class="comment-list">
-                            <!-- row -->
-                            <div class="comment-row">
-                                <img src="images/pic/avatar.jpg">
-                                <div class="left-col">
-                                    <h3> میترا رحیمی </h3>
-                                    <span>12/03/1397</span>
-                                    <p>
-                                        لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است
-                                    </p>
-                                </div>
-                            </div>
-                            <!-- /row -->
-                            <!-- row -->
-                            <div class="comment-row">
-                                <img src="images/pic/avatar.jpg">
-                                <div class="left-col">
-                                    <h3> میترا رحیمی </h3>
-                                    <span>12/03/1397</span>
-                                    <p>
-                                        لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است
-                                    </p>
-                                </div>
-                            </div>
-                            <!-- /row -->
-                            <!-- row -->
-                            <div class="comment-row">
-                                <img src="images/pic/avatar.jpg">
-                                <div class="left-col">
-                                    <h3> میترا رحیمی </h3>
-                                    <span>12/03/1397</span>
-                                    <p>
-                                        لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است
-                                    </p>
-                                </div>
-                            </div>
-                            <!-- /row -->
-                            <!-- row -->
-                            <div class="comment-row">
-                                <img src="images/pic/avatar.jpg">
-                                <div class="left-col">
-                                    <h3> میترا رحیمی </h3>
-                                    <span>12/03/1397</span>
-                                    <p>
-                                        لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است
-                                    </p>
-                                </div>
-                            </div>
-                            <!-- /row -->
-                            <!-- row -->
-                            <div class="comment-row">
-                                <img src="images/pic/avatar.jpg">
-                                <div class="left-col">
-                                    <h3> میترا رحیمی </h3>
-                                    <span>12/03/1397</span>
-                                    <p>
-                                        لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است
-                                    </p>
-                                </div>
-                            </div>
-                            <!-- /row -->
-
-                            <nav aria-label="Page navigation">
-                                <ul class="pagination justify-content-center">
-                                    <li class="page-item">
-                                        <a class="page-link" href="#" aria-label="Previous">
-                                            <span aria-hidden="true"><i class="zmdi zmdi-chevron-right"></i></span>
-                                        </a>
-                                    </li>
-                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                    <li class="page-item">
-                                        <a class="page-link" href="#" aria-label="Next">
-                                            <span aria-hidden="true"><i class="zmdi zmdi-chevron-left"></i></span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </nav>
-
+                        <div class="comment-list" id="listComment">
                         </div>
                     </div>
                 </section>
@@ -273,3 +189,20 @@
     </section>
 </div>
 
+@section Scripts
+{
+    <script src="/js/jquery.unobtrusive-ajax.min.js"></script>
+    <script>
+        function Success() {
+            $("#comment_Comment").val("");
+        }
+
+        $(function() {
+            $("#listComment").load("/Course/ShowComment/" + @Model.CourseId);
+        });
+
+        function pageComment(pageid) {
+            $("#listComment").load("/Course/ShowComment/" + @Model.CourseId+"?pageId="+pageid);
+        }
+    </script>
+}

@@ -259,7 +259,7 @@ namespace TopLearn.Core.Services
 
             if (!string.IsNullOrEmpty(filter))
             {
-                result = result.Where(c => c.CourseTitle.Contains(filter)||c.Tags.Contains(filter));
+                result = result.Where(c => c.CourseTitle.Contains(filter) || c.Tags.Contains(filter));
             }
 
             switch (getType)
@@ -304,7 +304,7 @@ namespace TopLearn.Core.Services
 
             int skip = (pageId - 1) * take;
 
-           
+
             var courses = result.Include(c => c.CourseEpisodes)
                                 .Skip(skip)
                                 .Take(take)
@@ -331,8 +331,36 @@ namespace TopLearn.Core.Services
                 .Include(c => c.CourseStatus)
                 .Include(c => c.CourseLevel)
                 .Include(c => c.User)
-                .Include(c=>c.UserCourses)
+                .Include(c => c.UserCourses)
                 .FirstOrDefault(c => c.CourseId == courseId);
+        }
+
+        public void AddComment(CourseComment comment)
+        {
+            _context.CourseComments.Add(comment);
+            _context.SaveChanges();
+        }
+
+        public Tuple<List<CourseComment>, int> GetCourseComment(int courseId, int pageId = 1)
+        {
+            int take = 5;
+            int skip = (pageId - 1) * take;
+            int pageCount = _context.CourseComments
+                .Where(c => !c.IsDelete && c.CourseId == courseId)
+                .Count() / take;
+
+            if ((pageCount % 2) != 0)
+            {
+                pageCount += 1;
+            }
+
+            return Tuple.Create(_context.CourseComments
+                .Include(c => c.User)
+                .Where(c => !c.IsDelete && c.CourseId == courseId)
+                .Skip(skip)
+                .Take(take)
+                .OrderByDescending(c => c.CreateDate)
+                .ToList(), pageCount);
         }
     }
 }

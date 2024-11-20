@@ -46,5 +46,12 @@ namespace TopLearn.Core.Services.Interfaces
         void EditEpisode(CourseEpisode episode, IFormFile episodeFile);
 
         #endregion
+
+        #region Comments
+
+        void AddComment(CourseComment comment);
+        Tuple<List<CourseComment>,int> GetCourseComment(int courseId, int pageId = 1);
+
+        #endregion
     }
 }
