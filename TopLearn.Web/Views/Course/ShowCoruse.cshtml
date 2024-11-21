@@ -15,6 +15,25 @@
     }
 }
 
+@section MetaTag
+{
+    <meta name=googlebot content=index,follow>
+    <meta name=robots content=noodp,noydir>
+    <meta name=description content="شرح صفحه">
+
+    <meta property=og:site_name value="خودآموزش تاپ لرن">
+    <meta property=og:title content="@Model.CourseTitle">
+    <meta property=og:url content="https://toplearn.com/ShowCourse/@Model.CourseTitle" />
+    <meta property=og:image content="/course/image/@Model.CourseImageName">
+    <meta property=og:image:url content="/course/image/@Model.CourseImageName" />
+    <meta property=og:image:width content="700">
+
+    <meta property=og:image:type content="image/jpg">
+    <meta property=og:description content="">
+    <meta property=og:price:currency content="IRR">
+    <meta property=og:locale content="ir_FA">
+}
+
 <div class="container">
     <nav aria-label="breadcrumb">
         <ul class="breadcrumb">
@@ -168,9 +187,9 @@
 
                 <div class="share-layer">
                     <span> به اشتراک گذاری </span>
-                    <a href=""><i class="zmdi zmdi-facebook"></i></a>
-                    <a href=""><i class="zmdi zmdi-google-old"></i></a>
-                    <a href=""><i class="zmdi zmdi-twitter"></i></a>
+                    <a href="https://www.facebook.com/sharer/sharer.php?u=https://toplearn.com/ShowCourse/@Model.CourseId"><i class="zmdi zmdi-facebook"></i></a>
+                    <a href="https://plus.google.com/share?url=https://toplearn.com/ShowCourse/@Model.CourseId"><i class="zmdi zmdi-google-old"></i></a>
+                    <a href="https://twitter.com/intent/tweet?url=https://toplearn.com/ShowCourse/@Model.CourseId"><i class="zmdi zmdi-twitter"></i></a>
                     <a href=""><i class="zmdi zmdi-linkedin"></i></a>
                 </div>
 
@@ -202,7 +221,7 @@
         });
 
         function pageComment(pageid) {
-            $("#listComment").load("/Course/ShowComment/" + @Model.CourseId+"?pageId="+pageid);
+            $("#listComment").load("/Course/ShowComment/" + @Model.CourseId+"?pageId=" + pageid);
         }
     </script>
 }

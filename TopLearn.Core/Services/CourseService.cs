@@ -362,5 +362,23 @@ namespace TopLearn.Core.Services
                 .OrderByDescending(c => c.CreateDate)
                 .ToList(), pageCount);
         }
+
+        public List<ShowCourseListItemViewModel> GetPopularCourse()
+        {
+            return _context.Coueses
+                .Include(c => c.OrderDetails)
+                .Where(c => c.OrderDetails.Any())
+                .OrderByDescending(d => d.OrderDetails.Count)
+                .Take(8)
+                .Select(c => new ShowCourseListItemViewModel()
+                {
+                    CourseId = c.CourseId,
+                    ImageName = c.CourseImageName,
+                    Price = c.CoursePrice,
+                    Title = c.CourseTitle,
+                    TotalTime = new TimeSpan(c.CourseEpisodes.Sum(e => e.EpisodeTime.Ticks))
+                })
+                .ToList();
+        }
     }
 }
