@@ -44,6 +44,7 @@ namespace TopLearn.DataLayer.Context
         public DbSet<CourseStatus> CourseStatuses { get; set; }
         public DbSet<UserCourse> UserCourses { get; set; }
         public DbSet<CourseComment> CourseComments { get; set; }
+        public DbSet<CourseVote> CourseVotes { get; set; }
 
         #endregion
 
@@ -155,7 +156,7 @@ namespace TopLearn.DataLayer.Context
                 .HasOne(o => o.User)
                 .WithMany(o => o.Orders)
                 .HasForeignKey(o => o.UserId);
-                
+
 
             #endregion
 
@@ -165,7 +166,7 @@ namespace TopLearn.DataLayer.Context
                 .HasOne(o => o.Order)
                 .WithMany(o => o.OrderDetails)
                 .HasForeignKey(o => o.OrderId);
-                
+
 
             modelBuilder.Entity<OrderDetail>()
                 .HasOne(o => o.Course)
@@ -178,9 +179,9 @@ namespace TopLearn.DataLayer.Context
             #region UserCourse
 
             modelBuilder.Entity<UserCourse>()
-                .HasOne(uc=>uc.Course)
-                .WithMany(uc=>uc.UserCourses)
-                .HasForeignKey(uc=>uc.CourseId);
+                .HasOne(uc => uc.Course)
+                .WithMany(uc => uc.UserCourses)
+                .HasForeignKey(uc => uc.CourseId);
 
             modelBuilder.Entity<UserCourse>()
                .HasOne(uc => uc.User)
@@ -192,8 +193,8 @@ namespace TopLearn.DataLayer.Context
             #region UserDiscountCode
 
             modelBuilder.Entity<UserDiscountCode>()
-                .HasOne(u=>u.User)
-                .WithMany(u=>u.UserDiscountCodes)
+                .HasOne(u => u.User)
+                .WithMany(u => u.UserDiscountCodes)
                 .HasForeignKey(u => u.UserId);
 
             modelBuilder.Entity<UserDiscountCode>()
@@ -214,7 +215,21 @@ namespace TopLearn.DataLayer.Context
                 .HasOne(c => c.Course)
                 .WithMany(c => c.CourseComments)
                 .HasForeignKey(c => c.CourseId);
-                
+
+
+            #endregion
+
+            #region CourseVote
+
+            modelBuilder.Entity<CourseVote>()
+                .HasOne(c => c.User)
+                .WithMany(c => c.CourseVotes)
+                .HasForeignKey(c => c.UserId);
+
+            modelBuilder.Entity<CourseVote>()
+                .HasOne(c => c.Course)
+                .WithMany(c => c.CourseVotes)
+                .HasForeignKey(c => c.CoruseId);
 
             #endregion
         }

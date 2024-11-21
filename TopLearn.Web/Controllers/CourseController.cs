@@ -86,5 +86,10 @@ namespace TopLearn.Web.Controllers
         {
             return View(_courseService.GetCourseComment(id, pageId));
         }
+
+        public IActionResult CourseVote(int Id)
+        {
+            return PartialView();
+        }
     }
 }
