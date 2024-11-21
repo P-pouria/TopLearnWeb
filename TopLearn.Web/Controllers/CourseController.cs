@@ -1,4 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TopLearn.Core.Services.Interfaces;
 using TopLearn.DataLayer.Entities.Course;
@@ -10,6 +15,7 @@ namespace TopLearn.Web.Controllers
         private ICourseService _courseService;
         private IOrderService _orderService;
         private IUserService _userService;
+
         public CourseController(ICourseService courseService, IOrderService orderService, IUserService userService)
         {
             _courseService = courseService;
@@ -17,30 +23,66 @@ namespace TopLearn.Web.Controllers
             _userService = userService;
         }
 
-        public IActionResult Index(int pageId = 1, string filter = "", string getType = "all", string orderByType = "date", int startPrice = 0, int endPrice = 0, List<int> selectedGroups = null)
+        public IActionResult Index(int pageId = 1, string filter = ""
+            , string getType = "all", string orderByType = "date",
+            int startPrice = 0, int endPrice = 0, List<int> selectedGroups = null)
         {
             ViewBag.selectedGroups = selectedGroups;
             ViewBag.Groups = _courseService.GetAllGroup();
             ViewBag.pageId = pageId;
-
-            var coursesData = _courseService.GetCourse(pageId, filter, getType, orderByType, startPrice, endPrice, selectedGroups, 9);
-
-            return View(coursesData);
+            return View(_courseService.GetCourse(pageId, filter, getType, orderByType, startPrice, endPrice, selectedGroups, 9));
         }
 
+
         [Route("ShowCourse/{id}")]
-        public IActionResult ShowCoruse(int id)
+        public IActionResult ShowCourse(int id, int episode = 0)
         {
             var course = _courseService.GetCourseForShow(id);
             if (course == null)
             {
                 return NotFound();
             }
+
+            if (episode != 0 && User.Identity.IsAuthenticated)
+            {
+                if (course.CourseEpisodes.All(e => e.EpisodeId != episode))
+                {
+                    return NotFound();
+                }
+
+                if (!course.CourseEpisodes.First(e => e.EpisodeId == episode).IsFree)
+                {
+                    if (!_orderService.IsUserInCourse(User.Identity.Name, id))
+                    {
+                        return NotFound();
+                    }
+                }
+
+                var ep = course.CourseEpisodes.First(e => e.EpisodeId == episode);
+                ViewBag.Episode = ep;
+                string filePath = Directory.GetCurrentDirectory();
+                if (ep.IsFree)
+                {
+                    filePath = System.IO.Path.Combine(filePath, "wwwroot/courseOnline", ep.EpisodeFileName.Replace(".rar", ".mp4"));
+                }
+                else
+                {
+                    filePath = System.IO.Path.Combine(filePath, "wwwroot/CourseFilesOnline", ep.EpisodeFileName.Replace(".rar", ".mp4"));
+                }
+
+                if (!System.IO.File.Exists(filePath))
+                {
+
+                }
+
+                ViewBag.filePath = filePath;
+            }
+
             return View(course);
         }
 
         [Authorize]
-        public IActionResult BuyCourse(int id)
+        public ActionResult BuyCourse(int id)
         {
             int orderId = _orderService.AddOrder(User.Identity.Name, id);
             return Redirect("/UserPanel/MyOrders/ShowOrder/" + orderId);
@@ -70,6 +112,8 @@ namespace TopLearn.Web.Controllers
 
             return Forbid();
         }
+
+
 
         [HttpPost]
         public IActionResult CreateComment(CourseComment comment)
@@ -106,5 +150,7 @@ namespace TopLearn.Web.Controllers
 
             return PartialView("CourseVote", _courseService.GetCourseVotes(id));
         }
+
+
     }
 }

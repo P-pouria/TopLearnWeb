@@ -1,5 +1,8 @@
-﻿@using TopLearn.Core.Convertors
+﻿@using System.IO
+@using Microsoft.AspNetCore.Connections.Features
+@using TopLearn.Core.Convertors
 @using TopLearn.Core.Services.Interfaces
+@using TopLearn.DataLayer.Entities.Course
 @model TopLearn.DataLayer.Entities.Course.Course
 
 @inject IOrderService _OrderService;
@@ -73,6 +76,17 @@
                     }
 
                     <h2> سرفصل های این دوره : </h2>
+                    @if (ViewBag.Episode != null)
+                    {
+                        CourseEpisode episode = ViewBag.Episode as CourseEpisode;
+
+
+
+                        <h2>@episode.EpisodeTitle</h2>
+                        <video controls style="width: 100%">
+                            <source src="@ViewBag.filePath" />
+                        </video>
+                    }
                     <ul>
                         @foreach (var item in Model.CourseEpisodes)
                         {
@@ -84,6 +98,7 @@
                                         <a href="/DownloadFile/@item.EpisodeId">
                                             @item.EpisodeTitle
                                         </a>
+
                                     </h3>
                                 }
                                 else
@@ -99,6 +114,14 @@
                                 else
                                 {
                                     <i> نقدی </i>
+                                }
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    if (item.IsFree || IsUserInCourse)
+                                    {
+                                        <a href="/ShowCourse/@Model.CourseId?episode=@item.EpisodeId">تماشا</a>
+                                    }
+
                                 }
                                 <span>@item.EpisodeTime</span>
                             </li>
