@@ -237,5 +237,11 @@
                 $(function() {
                     $("#vot").load("/Course/CourseVote/@Model.CourseId");
                 });
+
+                function vote(vote) {
+                    $("#vot").fadeOut('slow');
+                    $("#vot").load("/Course/AddVote/@(Model.CourseId)?vote=" + vote);
+                    $("#vot").fadeIn('slow');
+                }
     </script>
 }
