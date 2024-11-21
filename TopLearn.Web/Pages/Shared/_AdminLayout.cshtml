@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using TopLearn.Core.Services.Interfaces
+
+@inject IPermissionService _PermissionService
+
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -59,9 +63,12 @@
                         <li>
                             <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> مدیریت کاربران<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
-                                <li>
-                                    <a href="/admin/roles">دسترسی ها</a>
-                                </li>
+                                @if (_PermissionService.Checkpermission(6, User.Identity.Name))
+                                {
+                                    <li>
+                                        <a href="/admin/roles">دسترسی ها</a>
+                                    </li>
+                                }
                                 <li>
                                     <a href="/admin/users">کاربران</a>
                                 </li>
@@ -71,6 +78,7 @@
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
+
                         <li>
                             <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> مدیریت دوره ها<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">

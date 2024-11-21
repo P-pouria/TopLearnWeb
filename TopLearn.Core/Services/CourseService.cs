@@ -24,11 +24,11 @@ namespace TopLearn.Core.Services
             _context = context;
         }
 
-        public async Task<List<CourseGroup>> GetAllGroup()
+        public List<CourseGroup> GetAllGroup()
         {
-            return await _context.CourseGroups
-                         .Include(g => g.CourseGroups)
-                         .ToListAsync();
+            return _context.CourseGroups
+                .Include(c => c.CourseGroups)
+                .ToList();
         }
 
         public List<SelectListItem> GetGroupForManageCourse()
@@ -379,6 +379,23 @@ namespace TopLearn.Core.Services
                     TotalTime = new TimeSpan(c.CourseEpisodes.Sum(e => e.EpisodeTime.Ticks))
                 })
                 .ToList();
+        }
+
+        public void AddGroup(CourseGroup group)
+        {
+            _context.CourseGroups.Add(group);
+            _context.SaveChanges();
+        }
+
+        public void UpdateGroup(CourseGroup group)
+        {
+            _context.CourseGroups.Update(group);
+            _context.SaveChanges();
+        }
+
+        public CourseGroup GetById(int groupId)
+        {
+            return _context.CourseGroups.Find(groupId);
         }
     }
 }

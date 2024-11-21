@@ -15,12 +15,15 @@ namespace TopLearn.Core.Services.Interfaces
     {
         #region Group
 
-        Task<List<CourseGroup>> GetAllGroup();
+        List<CourseGroup> GetAllGroup();
         List<SelectListItem> GetGroupForManageCourse();
         List<SelectListItem> GetSubGroupForManageCourse(int groupId);
         List<SelectListItem> GetTeachers();
         List<SelectListItem> GetLevels();
         List<SelectListItem> GetStatus();
+        CourseGroup GetById(int groupId);
+        void AddGroup(CourseGroup group);
+        void UpdateGroup(CourseGroup group);
 
         #endregion
 

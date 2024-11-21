@@ -29,8 +29,17 @@ namespace TopLearn.Web.Pages.Admin.Courses
             var groups = _courseService.GetGroupForManageCourse();
             ViewData["Groups"] = new SelectList(groups, "Value", "Text", Course.GroupId);
 
-            var subGrous = _courseService.GetSubGroupForManageCourse(int.Parse(groups.First().Value));
-            ViewData["SubGroups"] = new SelectList(subGrous, "Value", "Text", Course.SubGroup ?? 0);
+            List<SelectListItem> subgroups = new List<SelectListItem>()
+            {
+                new SelectListItem(){Text = "انتخاب کنید",Value = ""}
+            };
+            subgroups.AddRange(_courseService.GetSubGroupForManageCourse(Course.GroupId));
+            string selectedSubGroup = null;
+            if (Course.SubGroup != null)
+            {
+                selectedSubGroup = Course.SubGroup.ToString();
+            }
+            ViewData["SubGroups"] = new SelectList(subgroups, "Value", "Text", selectedSubGroup);
 
             var teachers = _courseService.GetTeachers();
             ViewData["Teachers"] = new SelectList(teachers, "Value", "Text", Course.TeacherId);

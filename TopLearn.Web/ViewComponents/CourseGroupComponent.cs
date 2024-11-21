@@ -19,12 +19,7 @@ namespace TopLearn.Web.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var groups = await _courseService.GetAllGroup();
-            if (groups == null || !groups.Any())
-            {
-                return Content("هیچ گروهی برای نمایش وجود ندارد.");
-            }
-            return View("CourseGroup", groups);
+            return await Task.FromResult((IViewComponentResult)View("CourseGroup", _courseService.GetAllGroup()));
         }
 
     }
