@@ -229,7 +229,7 @@ namespace TopLearn.DataLayer.Context
             modelBuilder.Entity<CourseVote>()
                 .HasOne(c => c.Course)
                 .WithMany(c => c.CourseVotes)
-                .HasForeignKey(c => c.CoruseId);
+                .HasForeignKey(c => c.CourseId);
 
             #endregion
         }

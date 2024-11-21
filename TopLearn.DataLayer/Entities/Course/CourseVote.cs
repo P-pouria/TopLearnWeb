@@ -12,7 +12,7 @@ namespace TopLearn.DataLayer.Entities.Course
         [Key]
         public int VoteId { get; set; }
         [Required]
-        public int CoruseId { get; set; }
+        public int CourseId { get; set; }
         [Required]
         public int UserId { get; set; }
         [Required]

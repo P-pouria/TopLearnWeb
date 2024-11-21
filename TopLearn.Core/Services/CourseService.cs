@@ -400,7 +400,7 @@ namespace TopLearn.Core.Services
 
         public void AddVote(int userId, int courseId, bool vote)
         {
-            var UserVote = _context.CourseVotes.FirstOrDefault(c => c.UserId == userId && c.CoruseId == courseId);
+            var UserVote = _context.CourseVotes.FirstOrDefault(c => c.UserId == userId && c.CourseId == courseId);
             if (UserVote != null)
             {
                 UserVote.Vote = vote;
@@ -409,7 +409,7 @@ namespace TopLearn.Core.Services
             {
                 UserVote = new CourseVote()
                 {
-                    CoruseId = courseId,
+                    CourseId = courseId,
                     UserId = userId,
                     Vote = vote
                 };
@@ -417,6 +417,25 @@ namespace TopLearn.Core.Services
             }
 
             _context.SaveChanges();
+        }
+
+        public Tuple<int, int> GetCourseVotes(int courseId)
+        {
+            var votes = _context.CourseVotes
+                .Where(v => v.CourseId == courseId)
+                .Select(v => v.Vote)
+                .ToList();
+
+            return Tuple.Create(votes.Count(c => c), votes.Count(c => !c));
+        }
+
+        public bool IsFree(int courseId)
+        {
+            return _context.Coueses
+                .Where(c => c.CourseId == courseId)
+                .Select(c => c.CoursePrice)
+                .First() == 0;
+
         }
     }
 }

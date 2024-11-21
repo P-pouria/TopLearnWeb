@@ -89,7 +89,14 @@ namespace TopLearn.Web.Controllers
 
         public IActionResult CourseVote(int Id)
         {
-            return PartialView();
+            if (!_courseService.IsFree(Id))
+            {
+                if (!_orderService.IsUserInCourse(User.Identity.Name, Id))
+                {
+                    ViewBag.NotAccess = true;
+                }
+            }
+            return PartialView(_courseService.GetCourseVotes(Id));
         }
 
         [Authorize]
@@ -97,7 +104,7 @@ namespace TopLearn.Web.Controllers
         {
             _courseService.AddVote(_userService.GetUserIdByUserName(User.Identity.Name), id, vote);
 
-            return PartialView("CourseVote");
+            return PartialView("CourseVote", _courseService.GetCourseVotes(id));
         }
     }
 }
