@@ -23,9 +23,9 @@ namespace TopLearn.DataLayer.Migrations
                 {
                     table.PrimaryKey("PK_UserCourses", x => x.UC_Id);
                     table.ForeignKey(
-                        name: "FK_UserCourses_Coueses_CourseId",
+                        name: "FK_UserCourses_Courses_CourseId",
                         column: x => x.CourseId,
-                        principalTable: "Coueses",
+                        principalTable: "Courses",
                         principalColumn: "CourseId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(

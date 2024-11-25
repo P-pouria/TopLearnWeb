@@ -150,7 +150,7 @@ namespace TopLearn.DataLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Coueses",
+                name: "Courses",
                 columns: table => new
                 {
                     CourseId = table.Column<int>(type: "int", nullable: false)
@@ -171,33 +171,33 @@ namespace TopLearn.DataLayer.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Coueses", x => x.CourseId);
+                    table.PrimaryKey("PK_Courses", x => x.CourseId);
                     table.ForeignKey(
-                        name: "FK_Coueses_CourseGroups_GroupId",
+                        name: "FK_Courses_CourseGroups_GroupId",
                         column: x => x.GroupId,
                         principalTable: "CourseGroups",
                         principalColumn: "GroupId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Coueses_CourseGroups_SubGroup",
+                        name: "FK_Courses_CourseGroups_SubGroup",
                         column: x => x.SubGroup,
                         principalTable: "CourseGroups",
                         principalColumn: "GroupId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Coueses_CourseLevels_LevelId",
+                        name: "FK_Courses_CourseLevels_LevelId",
                         column: x => x.LevelId,
                         principalTable: "CourseLevels",
                         principalColumn: "LevelId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Coueses_CourseStatuses_StatusId",
+                        name: "FK_Courses_CourseStatuses_StatusId",
                         column: x => x.StatusId,
                         principalTable: "CourseStatuses",
                         principalColumn: "StatusId",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Coueses_Users_TeacherId",
+                        name: "FK_Courses_Users_TeacherId",
                         column: x => x.TeacherId,
                         principalTable: "Users",
                         principalColumn: "UserId",
@@ -276,36 +276,36 @@ namespace TopLearn.DataLayer.Migrations
                 {
                     table.PrimaryKey("PK_CourseEpisodes", x => x.EpisodeId);
                     table.ForeignKey(
-                        name: "FK_CourseEpisodes_Coueses_CourseId",
+                        name: "FK_CourseEpisodes_Courses_CourseId",
                         column: x => x.CourseId,
-                        principalTable: "Coueses",
+                        principalTable: "Courses",
                         principalColumn: "CourseId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Coueses_GroupId",
-                table: "Coueses",
+                name: "IX_Courses_GroupId",
+                table: "Courses",
                 column: "GroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Coueses_LevelId",
-                table: "Coueses",
+                name: "IX_Courses_LevelId",
+                table: "Courses",
                 column: "LevelId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Coueses_StatusId",
-                table: "Coueses",
+                name: "IX_Courses_StatusId",
+                table: "Courses",
                 column: "StatusId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Coueses_SubGroup",
-                table: "Coueses",
+                name: "IX_Courses_SubGroup",
+                table: "Courses",
                 column: "SubGroup");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Coueses_TeacherId",
-                table: "Coueses",
+                name: "IX_Courses_TeacherId",
+                table: "Courses",
                 column: "TeacherId");
 
             migrationBuilder.CreateIndex(
@@ -370,7 +370,7 @@ namespace TopLearn.DataLayer.Migrations
                 name: "Wallets");
 
             migrationBuilder.DropTable(
-                name: "Coueses");
+                name: "Courses");
 
             migrationBuilder.DropTable(
                 name: "Permission");

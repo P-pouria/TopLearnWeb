@@ -32,7 +32,7 @@ namespace TopLearn.Core.Services
             Order order = _context.Orders
                 .FirstOrDefault(o => o.UserId == userId && !o.Isfinaly);
 
-            var course = _context.Coueses.Find(courseId);
+            var course = _context.Courses.Find(courseId);
 
             if (order == null)
             {

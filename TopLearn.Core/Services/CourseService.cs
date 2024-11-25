@@ -125,7 +125,7 @@ namespace TopLearn.Core.Services
 
         public List<ShowCourseForAdminViewModel> GetCoursesForAdmin()
         {
-            return _context.Coueses.Select(c => new ShowCourseForAdminViewModel()
+            return _context.Courses.Select(c => new ShowCourseForAdminViewModel()
             {
                 CourseId = c.CourseId,
                 ImageName = c.CourseImageName,
@@ -136,7 +136,7 @@ namespace TopLearn.Core.Services
 
         public Course GetCourseById(int courseId)
         {
-            return _context.Coueses.Find(courseId);
+            return _context.Courses.Find(courseId);
         }
 
         public void UpdateCourse(Course course, IFormFile imgCourse, IFormFile courseDemo)
@@ -193,7 +193,7 @@ namespace TopLearn.Core.Services
                 }
             }
 
-            _context.Coueses.Update(course);
+            _context.Courses.Update(course);
             _context.SaveChanges();
         }
 
@@ -255,7 +255,7 @@ namespace TopLearn.Core.Services
             if (take == 0)
                 take = 8;
 
-            IQueryable<Course> result = _context.Coueses;
+            IQueryable<Course> result = _context.Courses;
 
             if (!string.IsNullOrEmpty(filter))
             {
@@ -326,7 +326,7 @@ namespace TopLearn.Core.Services
 
         public Course GetCourseForShow(int courseId)
         {
-            return _context.Coueses
+            return _context.Courses
                 .Include(c => c.CourseEpisodes)
                 .Include(c => c.CourseStatus)
                 .Include(c => c.CourseLevel)
@@ -365,11 +365,13 @@ namespace TopLearn.Core.Services
 
         public List<ShowCourseListItemViewModel> GetPopularCourse()
         {
-            return _context.Coueses
+            return _context.Courses
                 .Include(c => c.OrderDetails)
+                .Include(c => c.CourseEpisodes)
                 .Where(c => c.OrderDetails.Any())
-                .OrderByDescending(d => d.OrderDetails.Count)
+                .OrderByDescending(c => c.OrderDetails.Count)
                 .Take(8)
+                .AsEnumerable()
                 .Select(c => new ShowCourseListItemViewModel()
                 {
                     CourseId = c.CourseId,
@@ -380,6 +382,8 @@ namespace TopLearn.Core.Services
                 })
                 .ToList();
         }
+
+
 
         public void AddGroup(CourseGroup group)
         {
@@ -431,7 +435,7 @@ namespace TopLearn.Core.Services
 
         public bool IsFree(int courseId)
         {
-            return _context.Coueses
+            return _context.Courses
                 .Where(c => c.CourseId == courseId)
                 .Select(c => c.CoursePrice)
                 .First() == 0;

@@ -11,7 +11,7 @@ namespace TopLearn.DataLayer.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_CourseVotes_Coueses_CoruseId",
+                name: "FK_CourseVotes_Courses_CoruseId",
                 table: "CourseVotes");
 
             migrationBuilder.RenameColumn(
@@ -25,10 +25,10 @@ namespace TopLearn.DataLayer.Migrations
                 newName: "IX_CourseVotes_CourseId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_CourseVotes_Coueses_CourseId",
+                name: "FK_CourseVotes_Courses_CourseId",
                 table: "CourseVotes",
                 column: "CourseId",
-                principalTable: "Coueses",
+                principalTable: "Courses",
                 principalColumn: "CourseId",
                 onDelete: ReferentialAction.Restrict);
         }
@@ -37,7 +37,7 @@ namespace TopLearn.DataLayer.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_CourseVotes_Coueses_CourseId",
+                name: "FK_CourseVotes_Courses_CourseId",
                 table: "CourseVotes");
 
             migrationBuilder.RenameColumn(
@@ -51,10 +51,10 @@ namespace TopLearn.DataLayer.Migrations
                 newName: "IX_CourseVotes_CoruseId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_CourseVotes_Coueses_CoruseId",
+                name: "FK_CourseVotes_Courses_CoruseId",
                 table: "CourseVotes",
                 column: "CoruseId",
-                principalTable: "Coueses",
+                principalTable: "Courses",
                 principalColumn: "CourseId",
                 onDelete: ReferentialAction.Restrict);
         }

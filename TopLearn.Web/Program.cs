@@ -53,37 +53,27 @@ var app = builder.Build();
 
 #region Middleware
 
-//// Middleware 404
-//app.Use(async (context, next) =>
-//{
-//    await next();
-//    if (context.Response.StatusCode == 404)
-//    {
-//        context.Response.Redirect("/Home/Error404");
-//    }
-//});
-
-//// Middleware coursefilesonline
-//app.Use(async (context, next) =>
-//{
-//    if (context.Request.Path.Value!.ToLower().StartsWith("/coursefilesonline"))
-//    {
-//        var callingUrl = context.Request.Headers["Referer"].ToString();
-//        if (!string.IsNullOrEmpty(callingUrl) &&
-//            (callingUrl.StartsWith("https://localhost:44349") || callingUrl.StartsWith("https://localhost:44349")))
-//        {
-//            await next.Invoke();
-//        }
-//        else
-//        {
-//            context.Response.Redirect("/Login");
-//        }
-//    }
-//    else
-//    {
-//        await next.Invoke();
-//    }
-//});
+// Middleware coursefilesonline
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path.Value!.ToLower().StartsWith("/coursefilesonline"))
+    {
+        var callingUrl = context.Request.Headers["Referer"].ToString();
+        if (!string.IsNullOrEmpty(callingUrl) &&
+            (callingUrl.StartsWith("https://localhost:44335") || callingUrl.StartsWith("https://localhost:44335")))
+        {
+            await next.Invoke();
+        }
+        else
+        {
+            context.Response.Redirect("/Login");
+        }
+    }
+    else
+    {
+        await next.Invoke();
+    }
+});
 
 #endregion
 

@@ -90,7 +90,7 @@ namespace TopLearn.DataLayer.Migrations
 
                     b.HasIndex("TeacherId");
 
-                    b.ToTable("Coueses");
+                    b.ToTable("Courses");
                 });
 
             modelBuilder.Entity("TopLearn.DataLayer.Entities.Course.CourseComment", b =>

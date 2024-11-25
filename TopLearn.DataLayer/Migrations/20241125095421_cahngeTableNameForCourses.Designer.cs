@@ -12,8 +12,8 @@ using TopLearn.DataLayer.Context;
 namespace TopLearn.DataLayer.Migrations
 {
     [DbContext(typeof(TopLearnContext))]
-    [Migration("20241112121704_mig_UserCourse")]
-    partial class mig_UserCourse
+    [Migration("20241125095421_cahngeTableNameForCourses")]
+    partial class cahngeTableNameForCourses
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -94,6 +94,43 @@ namespace TopLearn.DataLayer.Migrations
                     b.HasIndex("TeacherId");
 
                     b.ToTable("Courses");
+                });
+
+            modelBuilder.Entity("TopLearn.DataLayer.Entities.Course.CourseComment", b =>
+                {
+                    b.Property<int>("CommentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CommentId"));
+
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasMaxLength(700)
+                        .HasColumnType("nvarchar(700)");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsAdminRead")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDelete")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CommentId");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CourseComments");
                 });
 
             modelBuilder.Entity("TopLearn.DataLayer.Entities.Course.CourseEpisode", b =>
@@ -191,6 +228,35 @@ namespace TopLearn.DataLayer.Migrations
                     b.ToTable("CourseStatuses");
                 });
 
+            modelBuilder.Entity("TopLearn.DataLayer.Entities.Course.CourseVote", b =>
+                {
+                    b.Property<int>("VoteId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("VoteId"));
+
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("Vote")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("VoteDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("VoteId");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CourseVotes");
+                });
+
             modelBuilder.Entity("TopLearn.DataLayer.Entities.Course.UserCourse", b =>
                 {
                     b.Property<int>("UC_Id")
@@ -212,6 +278,36 @@ namespace TopLearn.DataLayer.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserCourses");
+                });
+
+            modelBuilder.Entity("TopLearn.DataLayer.Entities.Order.Discount", b =>
+                {
+                    b.Property<int>("DiscountId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DiscountId"));
+
+                    b.Property<string>("DiscountCode")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<int>("DiscountPercent")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("UsableCount")
+                        .HasColumnType("int");
+
+                    b.HasKey("DiscountId");
+
+                    b.ToTable("Discounts");
                 });
 
             modelBuilder.Entity("TopLearn.DataLayer.Entities.Order.Order", b =>
@@ -384,6 +480,29 @@ namespace TopLearn.DataLayer.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("TopLearn.DataLayer.Entities.User.UserDiscountCode", b =>
+                {
+                    b.Property<int>("UD_Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UD_Id"));
+
+                    b.Property<int>("DiscountId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UD_Id");
+
+                    b.HasIndex("DiscountId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserDiscountCodes");
+                });
+
             modelBuilder.Entity("TopLearn.DataLayer.Entities.User.UserRole", b =>
                 {
                     b.Property<int>("UR_Id")
@@ -501,6 +620,25 @@ namespace TopLearn.DataLayer.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("TopLearn.DataLayer.Entities.Course.CourseComment", b =>
+                {
+                    b.HasOne("TopLearn.DataLayer.Entities.Course.Course", "Course")
+                        .WithMany("CourseComments")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("TopLearn.DataLayer.Entities.User.User", "User")
+                        .WithMany("CourseComments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("TopLearn.DataLayer.Entities.Course.CourseEpisode", b =>
                 {
                     b.HasOne("TopLearn.DataLayer.Entities.Course.Course", "Course")
@@ -520,6 +658,25 @@ namespace TopLearn.DataLayer.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("ParentGroup");
+                });
+
+            modelBuilder.Entity("TopLearn.DataLayer.Entities.Course.CourseVote", b =>
+                {
+                    b.HasOne("TopLearn.DataLayer.Entities.Course.Course", "Course")
+                        .WithMany("CourseVotes")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("TopLearn.DataLayer.Entities.User.User", "User")
+                        .WithMany("CourseVotes")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Course");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("TopLearn.DataLayer.Entities.Course.UserCourse", b =>
@@ -599,6 +756,25 @@ namespace TopLearn.DataLayer.Migrations
                     b.Navigation("Role");
                 });
 
+            modelBuilder.Entity("TopLearn.DataLayer.Entities.User.UserDiscountCode", b =>
+                {
+                    b.HasOne("TopLearn.DataLayer.Entities.Order.Discount", "Discount")
+                        .WithMany("UserDiscountCodes")
+                        .HasForeignKey("DiscountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("TopLearn.DataLayer.Entities.User.User", "User")
+                        .WithMany("UserDiscountCodes")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Discount");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("TopLearn.DataLayer.Entities.User.UserRole", b =>
                 {
                     b.HasOne("TopLearn.DataLayer.Entities.User.Role", "Role")
@@ -639,7 +815,11 @@ namespace TopLearn.DataLayer.Migrations
 
             modelBuilder.Entity("TopLearn.DataLayer.Entities.Course.Course", b =>
                 {
+                    b.Navigation("CourseComments");
+
                     b.Navigation("CourseEpisodes");
+
+                    b.Navigation("CourseVotes");
 
                     b.Navigation("OrderDetails");
 
@@ -665,6 +845,11 @@ namespace TopLearn.DataLayer.Migrations
                     b.Navigation("Courses");
                 });
 
+            modelBuilder.Entity("TopLearn.DataLayer.Entities.Order.Discount", b =>
+                {
+                    b.Navigation("UserDiscountCodes");
+                });
+
             modelBuilder.Entity("TopLearn.DataLayer.Entities.Order.Order", b =>
                 {
                     b.Navigation("OrderDetails");
@@ -684,11 +869,17 @@ namespace TopLearn.DataLayer.Migrations
 
             modelBuilder.Entity("TopLearn.DataLayer.Entities.User.User", b =>
                 {
+                    b.Navigation("CourseComments");
+
+                    b.Navigation("CourseVotes");
+
                     b.Navigation("Courses");
 
                     b.Navigation("Orders");
 
                     b.Navigation("UserCourses");
+
+                    b.Navigation("UserDiscountCodes");
 
                     b.Navigation("UserRoles");
 
