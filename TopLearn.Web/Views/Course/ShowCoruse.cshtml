@@ -19,16 +19,16 @@
 }
 
 @section MetaTag
-{
+    {
     <meta name=googlebot content=index,follow>
     <meta name=robots content=noodp,noydir>
     <meta name=description content="شرح صفحه">
-
+    
     <meta property=og:site_name value="خودآموزش تاپ لرن">
     <meta property=og:title content="@Model.CourseTitle">
-    <meta property=og:url content="https://toplearn.com/ShowCourse/@Model.CourseTitle" />
-    <meta property=og:image content="/course/image/@Model.CourseImageName">
-    <meta property=og:image:url content="/course/image/@Model.CourseImageName" />
+    <meta property=og:url content="https://toplearn.com/ShowCourse/@Model.CourseTitle"/>
+    <meta property=og:image content="/course/image/@Model.CourseImageName"> 
+    <meta property=og:image:url content="/course/image/@Model.CourseImageName"/>
     <meta property=og:image:width content="700">
 
     <meta property=og:image:type content="image/jpg">
@@ -57,15 +57,16 @@
                     <img src="/course/image/@Model.CourseImageName">
 
                     @Html.Raw(Model.CourseDescription)
-
+                    
                     @if (!string.IsNullOrEmpty(Model.DemoFileName))
                     {
                         <video style="width: 100%" controls poster="/course/image/@Model.CourseImageName">
-                            <source src="/course/demoes/@Model.DemoFileName" />
+                            <source src="/course/demoes/@Model.DemoFileName"/>
                         </video>
                     }
-
+                    
                     <div id="vot">
+                        
                     </div>
 
                     @if (!IsUserInCourse)
@@ -80,51 +81,51 @@
                     {
                         CourseEpisode episode = ViewBag.Episode as CourseEpisode;
 
-
+                     
 
                         <h2>@episode.EpisodeTitle</h2>
-                        <video controls style="width: 100%">
-                            <source src="@ViewBag.filePath" />
+                        <video controls style="width: 100%" >
+                            <source src="@ViewBag.filePath"/>
                         </video>
                     }
                     <ul>
                         @foreach (var item in Model.CourseEpisodes)
                         {
-                            <li>
-                                @if (item.IsFree || IsUserInCourse)
-                                {
+                        <li>
+                            @if (item.IsFree || IsUserInCourse)
+                            {
 
-                                    <h3>
-                                        <a href="/DownloadFile/@item.EpisodeId">
-                                            @item.EpisodeTitle
-                                        </a>
-
-                                    </h3>
-                                }
-                                else
-                                {
-                                    <h3>
+                                <h3>
+                                    <a href="/DownloadFile/@item.EpisodeId">
                                         @item.EpisodeTitle
-                                    </h3>
-                                }
-                                @if (item.IsFree)
+                                    </a>
+                                    
+                                </h3>
+                            }
+                            else
+                            {
+                                <h3>
+                                    @item.EpisodeTitle
+                                </h3>
+                            }
+                            @if (item.IsFree)
+                            {
+                                <i> رایگان </i>
+                            }
+                            else
+                            {
+                                <i> نقدی </i>
+                            }
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                if (item.IsFree || IsUserInCourse)
                                 {
-                                    <i> رایگان </i>
+                                    <a href="/ShowCourse/@Model.CourseId?episode=@item.EpisodeId">تماشا</a>
                                 }
-                                else
-                                {
-                                    <i> نقدی </i>
-                                }
-                                @if (User.Identity.IsAuthenticated)
-                                {
-                                    if (item.IsFree || IsUserInCourse)
-                                    {
-                                        <a href="/ShowCourse/@Model.CourseId?episode=@item.EpisodeId">تماشا</a>
-                                    }
-
-                                }
-                                <span>@item.EpisodeTime</span>
-                            </li>
+                             
+                            }
+                            <span>@item.EpisodeTime</span>
+                        </li>
 
                         }
                     </ul>
@@ -163,6 +164,7 @@
                         }
 
                         <div class="comment-list" id="listComment">
+
                         </div>
                     </div>
                 </section>
@@ -225,16 +227,18 @@
                     <a href="https://twitter.com/intent/tweet?url=https://toplearn.com/ShowCourse/@Model.CourseId"><i class="zmdi zmdi-twitter"></i></a>
                     <a href=""><i class="zmdi zmdi-linkedin"></i></a>
                 </div>
-
-                @if (Model.Tags != null)
-                {
-                    <div class="tags-layer">
-                        @foreach (string tag in Model.Tags.Split('-', StringSplitOptions.RemoveEmptyEntries))
-                        {
-                            <a href="/Course?filter=@tag"> @tag </a>
-                        }
-                    </div>
-                }
+               
+                    <a asp-controller="Forum" asp-action="Index" asp-route-courseId="@Model.CourseId" class="btn btn-block btn-warning"> پرسش و پاسخ </a>
+                
+                    @if (Model.Tags != null)
+                    {
+                        <div class="tags-layer">
+                            @foreach (string tag in Model.Tags.Split('-', StringSplitOptions.RemoveEmptyEntries))
+                            {
+                                <a href="/Course?filter=@tag"> @tag </a>
+                            }
+                        </div>
+                    }
 
             </aside>
         </div>
@@ -242,7 +246,7 @@
 </div>
 
 @section Scripts
-{
+    {
     <script src="/js/jquery.unobtrusive-ajax.min.js"></script>
     <script>
         function Success() {
@@ -257,14 +261,14 @@
             $("#listComment").load("/Course/ShowComment/" + @Model.CourseId+"?pageId="+pageid);
         }
 
-                $(function() {
-                    $("#vot").load("/Course/CourseVote/@Model.CourseId");
-                });
+        $(function() {
+            $("#vot").load("/Course/CourseVote/@Model.CourseId");
+        });
 
-                function vote(vote) {
-                    $("#vot").fadeOut('slow');
-                    $("#vot").load("/Course/AddVote/@(Model.CourseId)?vote=" + vote);
-                    $("#vot").fadeIn('slow');
-                }
+        function vote(vote) {
+            $("#vot").fadeOut('slow');
+            $("#vot").load("/Course/AddVote/@(Model.CourseId)?vote=" + vote);
+            $("#vot").fadeIn('slow');
+        }
     </script>
 }
