@@ -98,7 +98,7 @@
             if (input.files && input.files[0]) {
                 var reader = new FileReader();
 
-                reader.onload = function (e) {
+                reader.onload = function(e) {
                     $('#imgCourse').attr('src', e.target.result);
                 }
 
@@ -106,7 +106,7 @@
             }
         }
 
-        $("#imgCourseUp").change(function () {
+        $("#imgCourseUp").change(function() {
             readURL(this);
         });
     </script>
