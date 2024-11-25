@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SharpCompress.Archives;
 using TopLearn.Core.Services.Interfaces;
 using TopLearn.DataLayer.Entities.Course;
 
@@ -60,19 +61,46 @@ namespace TopLearn.Web.Controllers
 
                 var ep = course.CourseEpisodes.First(e => e.EpisodeId == episode);
                 ViewBag.Episode = ep;
-                string filePath = Directory.GetCurrentDirectory();
+                string filePath = "";
+                string checkFilePath = "";
                 if (ep.IsFree)
                 {
-                    filePath = System.IO.Path.Combine(filePath, "wwwroot/courseOnline", ep.EpisodeFileName.Replace(".rar", ".mp4"));
+                    filePath = "/courseOnline/" + ep.EpisodeFileName.Replace(".rar", ".mp4");
+                    checkFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/courseOnline",
+                        ep.EpisodeFileName.Replace(".rar", ".mp4"));
                 }
                 else
                 {
-                    filePath = System.IO.Path.Combine(filePath, "wwwroot/CourseFilesOnline", ep.EpisodeFileName.Replace(".rar", ".mp4"));
+                    filePath = "/CourseFilesOnline/" + ep.EpisodeFileName.Replace(".rar", ".mp4");
+                    checkFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/CourseFilesOnline",
+                        ep.EpisodeFileName.Replace(".rar", ".mp4"));
                 }
 
-                if (!System.IO.File.Exists(filePath))
-                {
 
+                if (!System.IO.File.Exists(checkFilePath))
+                {
+                    string targetPath = Directory.GetCurrentDirectory();
+                    if (ep.IsFree)
+                    {
+                        targetPath = System.IO.Path.Combine(targetPath, "wwwroot/courseOnline");
+                    }
+                    else
+                    {
+                        targetPath = System.IO.Path.Combine(targetPath, "wwwroot/CourseFilesOnline");
+                    }
+
+                    string rarPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/courseFiles",
+                        ep.EpisodeFileName);
+                    var archive = ArchiveFactory.Open(rarPath);
+
+                    var Entries = archive.Entries.OrderBy(x => x.Key.Length);
+                    foreach (var en in Entries)
+                    {
+                        if (Path.GetExtension(en.Key) == ".mp4")
+                        {
+                            en.WriteTo(System.IO.File.Create(Path.Combine(targetPath, ep.EpisodeFileName.Replace(".rar", ".mp4"))));
+                        }
+                    }
                 }
 
                 ViewBag.filePath = filePath;
