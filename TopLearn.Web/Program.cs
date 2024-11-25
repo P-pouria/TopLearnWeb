@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using TopLearn.Core.Convertors;
 using TopLearn.Core.Services;
@@ -52,6 +53,16 @@ builder.Services.AddTransient<IOrderService, OrderService>();
 var app = builder.Build();
 
 #region Middleware
+
+//Middleware Error404
+app.Use(async (context, next) =>
+{
+    await next();
+    if (context.Response.StatusCode == 404)
+    {
+        context.Response.Redirect("/Home/Error404");
+    }
+});
 
 // Middleware coursefilesonline
 app.Use(async (context, next) =>
