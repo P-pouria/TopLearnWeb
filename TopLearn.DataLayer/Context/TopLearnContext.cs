@@ -2,6 +2,7 @@
 using TopLearn.DataLayer.Entities.Course;
 using TopLearn.DataLayer.Entities.Order;
 using TopLearn.DataLayer.Entities.Permissions;
+using TopLearn.DataLayer.Entities.Question;
 using TopLearn.DataLayer.Entities.User;
 using TopLearn.DataLayer.Entities.Wallet;
 
@@ -53,6 +54,13 @@ namespace TopLearn.DataLayer.Context
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Discount> Discounts { get; set; }
+
+        #endregion
+
+        #region Question
+
+        public DbSet<Question> Questions { get; set; }
+        public DbSet<Answer> Answers { get; set; }
 
         #endregion
 
@@ -232,6 +240,35 @@ namespace TopLearn.DataLayer.Context
                 .HasForeignKey(c => c.CourseId);
 
             #endregion
+
+            #region Answer
+
+            modelBuilder.Entity<Answer>()
+                .HasOne(a => a.User)
+               .WithMany(u => u.Answers)
+               .HasForeignKey(a => a.UserId);
+
+            modelBuilder.Entity<Answer>()
+                .HasOne(a => a.Question)
+               .WithMany(q => q.Answers)
+               .HasForeignKey(a => a.QuestionId);
+
+            #endregion
+
+            #region Question 
+
+            modelBuilder.Entity<Question>()
+                .HasOne(q => q.User)
+               .WithMany(u => u.Questions)
+               .HasForeignKey(q => q.UserId);
+
+            modelBuilder.Entity<Question>()
+                .HasOne(q => q.Course)
+               .WithMany(c => c.Questions)
+               .HasForeignKey(q => q.CourseId);
+
+            #endregion
+
         }
     }
 }

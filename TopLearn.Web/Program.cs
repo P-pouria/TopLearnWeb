@@ -45,8 +45,7 @@ builder.Services.AddTransient<IViewRenderService, RenderViewToString>();
 builder.Services.AddTransient<IPermissionService, PermissionService>();
 builder.Services.AddTransient<ICourseService, CourseService>();
 builder.Services.AddTransient<IOrderService, OrderService>();
-
-//builder.Services.AddTransient<IForumService, ForumService>();
+builder.Services.AddTransient<IForumService, ForumService>();
 
 #endregion
 
